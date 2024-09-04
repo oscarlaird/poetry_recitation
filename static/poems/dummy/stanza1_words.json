@@ -1,0 +1,8 @@
+[
+        {"word": "once", "written": "Once", "initial": "o", "revealed": false, "id": 1, "speaker": 0, "verse": 0},
+        {"word": "upon", "written": "&nbsp upon", "initial": "u", "revealed": false, "id": 2, "speaker": 1, "verse": 0},
+        {"word": "a", "written": "&nbsp a", "initial": "a", "revealed": false, "id": 3, "speaker": 1, "verse": 0},
+        {"word": "midnight", "written": "&nbsp midnight", "initial": "m", "revealed": false, "id": 4, "speaker": 1, "verse": 1},
+        {"word": "dreary", "written": "&nbsp dreary,", "initial": "d", "revealed": false, "id": 5, "speaker": 0, "verse": 1},
+        {"word": "while", "written": "&nbsp while", "initial": "w", "revealed": false, "id": 6, "speaker": 1, "verse": 1}
+]
