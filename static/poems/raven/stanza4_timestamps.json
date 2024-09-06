@@ -1,0 +1,374 @@
+[
+    {
+        "conf": 1.0,
+        "end": 0.84,
+        "start": 0.09,
+        "word": "presently"
+    },
+    {
+        "conf": 1.0,
+        "end": 1.11,
+        "start": 0.9,
+        "word": "my"
+    },
+    {
+        "conf": 1.0,
+        "end": 1.53,
+        "start": 1.11,
+        "word": "soul"
+    },
+    {
+        "conf": 1.0,
+        "end": 1.74,
+        "start": 1.53,
+        "word": "grew"
+    },
+    {
+        "conf": 1.0,
+        "end": 2.49,
+        "start": 1.74,
+        "word": "stronger"
+    },
+    {
+        "conf": 1.0,
+        "end": 3.45,
+        "start": 2.7,
+        "word": "hesitating"
+    },
+    {
+        "conf": 0.552479,
+        "end": 3.680535,
+        "start": 3.45,
+        "word": "then"
+    },
+    {
+        "conf": 1.0,
+        "end": 3.87,
+        "start": 3.680535,
+        "word": "no"
+    },
+    {
+        "conf": 1.0,
+        "end": 4.44,
+        "start": 3.87,
+        "word": "longer"
+    },
+    {
+        "conf": 1.0,
+        "end": 5.34,
+        "start": 4.83,
+        "word": "sir"
+    },
+    {
+        "conf": 1.0,
+        "end": 5.61,
+        "start": 5.37,
+        "word": "said"
+    },
+    {
+        "conf": 1.0,
+        "end": 5.97,
+        "start": 5.61,
+        "word": "i"
+    },
+    {
+        "conf": 1.0,
+        "end": 6.18,
+        "start": 6.03,
+        "word": "or"
+    },
+    {
+        "conf": 1.0,
+        "end": 6.51,
+        "start": 6.18,
+        "word": "madam"
+    },
+    {
+        "conf": 1.0,
+        "end": 6.96,
+        "start": 6.51,
+        "word": "truly"
+    },
+    {
+        "conf": 0.88717,
+        "end": 7.17,
+        "start": 6.96,
+        "word": "your"
+    },
+    {
+        "conf": 1.0,
+        "end": 7.89,
+        "start": 7.17,
+        "word": "forgiveness"
+    },
+    {
+        "conf": 1.0,
+        "end": 8.16,
+        "start": 7.95,
+        "word": "i"
+    },
+    {
+        "conf": 1.0,
+        "end": 8.76,
+        "start": 8.16,
+        "word": "implore"
+    },
+    {
+        "conf": 1.0,
+        "end": 9.36,
+        "start": 9.12,
+        "word": "but"
+    },
+    {
+        "conf": 1.0,
+        "end": 9.45,
+        "start": 9.36,
+        "word": "the"
+    },
+    {
+        "conf": 1.0,
+        "end": 9.96,
+        "start": 9.45,
+        "word": "fact"
+    },
+    {
+        "conf": 1.0,
+        "end": 10.11,
+        "start": 9.96,
+        "word": "is"
+    },
+    {
+        "conf": 1.0,
+        "end": 10.26,
+        "start": 10.11,
+        "word": "i"
+    },
+    {
+        "conf": 1.0,
+        "end": 10.44,
+        "start": 10.26,
+        "word": "was"
+    },
+    {
+        "conf": 1.0,
+        "end": 11.04,
+        "start": 10.44,
+        "word": "napping"
+    },
+    {
+        "conf": 1.0,
+        "end": 11.4,
+        "start": 11.13,
+        "word": "and"
+    },
+    {
+        "conf": 0.615147,
+        "end": 11.606221,
+        "start": 11.4,
+        "word": "so"
+    },
+    {
+        "conf": 1.0,
+        "end": 12.03,
+        "start": 11.606221,
+        "word": "gently"
+    },
+    {
+        "conf": 1.0,
+        "end": 12.21,
+        "start": 12.03,
+        "word": "you"
+    },
+    {
+        "conf": 1.0,
+        "end": 12.42,
+        "start": 12.21,
+        "word": "came"
+    },
+    {
+        "conf": 1.0,
+        "end": 12.87,
+        "start": 12.42,
+        "word": "rapping"
+    },
+    {
+        "conf": 1.0,
+        "end": 13.05,
+        "start": 12.87,
+        "word": "and"
+    },
+    {
+        "conf": 0.866844,
+        "end": 13.29,
+        "start": 13.05,
+        "word": "so"
+    },
+    {
+        "conf": 1.0,
+        "end": 13.92,
+        "start": 13.29,
+        "word": "faintly"
+    },
+    {
+        "conf": 0.917886,
+        "end": 14.13,
+        "start": 13.92,
+        "word": "you"
+    },
+    {
+        "conf": 1.0,
+        "end": 14.43,
+        "start": 14.13,
+        "word": "came"
+    },
+    {
+        "conf": 1.0,
+        "end": 15.06,
+        "start": 14.43,
+        "word": "tapping"
+    },
+    {
+        "conf": 1.0,
+        "end": 15.9,
+        "start": 15.39,
+        "word": "tapping"
+    },
+    {
+        "conf": 1.0,
+        "end": 16.02,
+        "start": 15.9,
+        "word": "at"
+    },
+    {
+        "conf": 1.0,
+        "end": 16.2,
+        "start": 16.02,
+        "word": "my"
+    },
+    {
+        "conf": 1.0,
+        "end": 16.62,
+        "start": 16.2,
+        "word": "chamber"
+    },
+    {
+        "conf": 1.0,
+        "end": 16.89,
+        "start": 16.62,
+        "word": "door"
+    },
+    {
+        "conf": 0.552567,
+        "end": 17.13,
+        "start": 16.95,
+        "word": "the"
+    },
+    {
+        "conf": 1.0,
+        "end": 17.31,
+        "start": 17.143423,
+        "word": "i"
+    },
+    {
+        "conf": 1.0,
+        "end": 17.97,
+        "start": 17.31,
+        "word": "scarce"
+    },
+    {
+        "conf": 1.0,
+        "end": 18.21,
+        "start": 17.97,
+        "word": "was"
+    },
+    {
+        "conf": 1.0,
+        "end": 18.66,
+        "start": 18.24,
+        "word": "sure"
+    },
+    {
+        "conf": 1.0,
+        "end": 18.96,
+        "start": 18.66,
+        "word": "i"
+    },
+    {
+        "conf": 1.0,
+        "end": 19.38,
+        "start": 19.05,
+        "word": "heard"
+    },
+    {
+        "conf": 1.0,
+        "end": 19.74,
+        "start": 19.38,
+        "word": "you"
+    },
+    {
+        "conf": 1.0,
+        "end": 21.09,
+        "start": 20.82,
+        "word": "here"
+    },
+    {
+        "conf": 1.0,
+        "end": 21.21,
+        "start": 21.09,
+        "word": "i"
+    },
+    {
+        "conf": 1.0,
+        "end": 21.6,
+        "start": 21.21,
+        "word": "opened"
+    },
+    {
+        "conf": 1.0,
+        "end": 21.99,
+        "start": 21.6,
+        "word": "wide"
+    },
+    {
+        "conf": 1.0,
+        "end": 22.14,
+        "start": 22.02,
+        "word": "the"
+    },
+    {
+        "conf": 1.0,
+        "end": 22.65,
+        "start": 22.14,
+        "word": "door"
+    },
+    {
+        "conf": 1.0,
+        "end": 24.0,
+        "start": 23.37,
+        "word": "darkness"
+    },
+    {
+        "conf": 1.0,
+        "end": 24.57,
+        "start": 24.0,
+        "word": "there"
+    },
+    {
+        "conf": 1.0,
+        "end": 25.2,
+        "start": 24.96,
+        "word": "and"
+    },
+    {
+        "conf": 1.0,
+        "end": 25.68,
+        "start": 25.29,
+        "word": "nothing"
+    },
+    {
+        "conf": 1.0,
+        "end": 26.19,
+        "start": 25.71,
+        "word": "more"
+    }
+]

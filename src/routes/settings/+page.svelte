@@ -1,7 +1,7 @@
 <script>
     import FrameLayout from "../frameLayout.svelte";
     import TopBar from "./TopBar.svelte";
-    import Difficulty from "../Difficulty.svelte";
+    import Difficulty from "./Difficulty.svelte";
     import BottomBar from "./BottomBar.svelte";
 </script>
 

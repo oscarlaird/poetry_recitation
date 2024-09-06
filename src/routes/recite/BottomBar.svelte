@@ -22,8 +22,11 @@
     // microphone
     let mic_audioContext;  // audio context for the microphone for the vosk listener
     let mute_gain_node;  // gain node in between the microphone and the vosk listener
-    let audio;
     let source;
+    // narrator audio ctx
+    let narrator_audioContext;
+    let narrator_audioBuffer;
+    let narrator_source;
     // video_prog controls the position of the video
     // it is supposed to smooth out the discrete steps of $leading_idx
     // we have two objectives: be near to the user's position; stay near the user's average velocity
@@ -51,10 +54,6 @@
         // we can't mutate the store directly
         // and we don't want to replace w/ a copied dict since
         // we want to mutate the underlying all_words
-        all_words.update(words => {
-            words[$leading_idx].revealed = true;
-            return words;
-        });
         leading_idx.update(i => i + 1);
         remaining_time.update((target_val, t) => {return time_per_word}, { duration: 0, easing: linear }); // reset the timer to full.
         // move to the next stanza
@@ -108,46 +107,43 @@
     }
     //
     async function play_clip(start_word_idx, stop_word_idx) {
-        // pull the SYLT tags from the mp3
         // play the audio from start_word_idx to stop_word_idx
         // wait for the audio to finish
-        //
-        let start_time = $timestamps[start_word_idx].time;
-        let stop_time = stop_word_idx < $timestamps.length ? $timestamps[stop_word_idx].time : audio.duration * 1000;
-        // play the audio from start_time to stop_time
-        audio.currentTime = start_time / 1000.0 - 0.02;    
-        stop_time -= 0.02;  // shave 20ms to avoid hearing the start of the next word
-        audio.play();
-        audio.muted = false;
+        let start_time = $timestamps[start_word_idx].start - 0.02;
+        let stop_time = $timestamps[stop_word_idx].end;
+        // console.log('playing from', start_time, 'to', stop_time);
+        narrator_source = narrator_audioContext.createBufferSource();
+        narrator_source.buffer = narrator_audioBuffer;
+        narrator_source.connect(narrator_audioContext.destination);
+        narrator_source.start(0, start_time, stop_time - start_time);
         // pause the audio after stop_time
-        console.log('playing from', start_time, 'to', stop_time);
+        // mute the audio after stop_time
+        // don't resolve until the audio is done playing
+        let finish_promise = new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, (stop_time - start_time)*1000);
+        });
         // reveal the words as they are spoken
-        for (let i = start_word_idx; i < stop_word_idx; i++) {
+        for (let i = start_word_idx; i <= stop_word_idx; i++) {
             setTimeout(async () => {
                 await revealNextWord();
-            }, $timestamps[i].time - start_time);
+            }, ($timestamps[i].start - start_time)*1000);
         }
-        // mute the audio after stop_time
-        // don't resolve until the audio is muted
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                audio.muted = true;
-                resolve();
-            }, (stop_time - start_time));
-        });
+        return finish_promise;
     }
     async function narrator_turn() {
         // first we assert that next_word.speaker === 0
         console.assert($next_word.speaker === 0, 'It is not the narrator\'s turn');
         // turn off the user's microphone
-        // with audio source.disconnect();
-
         // calculate start and stop words
         let start_word_idx = $leading_idx;
         let stop_word_idx = $leading_idx + 1;
         while (stop_word_idx < $n_words && $all_words[stop_word_idx].speaker === 0) {
             stop_word_idx += 1;
         }
+        stop_word_idx -= 1; // we don't want to include the first word of the next turn
+        // stop_word_idx is the last word that should be spoken
         // play the clip and wait for it to finish
         // mic_audioContext.suspend();
         mute_gain_node.gain.setValueAtTime(0.0, mic_audioContext.currentTime);
@@ -182,16 +178,26 @@
         ]);
         // assert that $all_words and $timestamps are the same length
         console.assert($n_words === $timestamps.length, 'The number of words and timestamps do not match', `n_words: ${$n_words}, timestamps: ${$timestamps.length}`);
-        console.log('data loaded');
+        // check that they agree in every word
+        for (let i = 0; i < $n_words; i++) {
+            if ($all_words[i].word !== $timestamps[i].word) {
+                console.error('word mismatch at index', i, $all_words[i], $timestamps[i]);
+            }
+            break;
+        }
+        console.log('loaded stanza words', $all_words);
     }
     let load_promise = new Promise((resolve) => {});
     let mic_promise;
     onMount(async () => {
-        audio = new Audio($audio_filename);
-        audio.muted = true;
         // load the lyrics, timestamps, and vosk model
         load_promise = load_data();
         mic_promise = load_mic();
+        // narrator audio ctx
+        narrator_audioContext = new AudioContext();
+        narrator_audioBuffer = await fetch($audio_filename)
+            .then(response => response.arrayBuffer())
+            .then(buffer => narrator_audioContext.decodeAudioData(buffer));
         // narrator's turn once the data is loaded (so we can see the words) and the mic is ready (so we can mute it)
         await Promise.all([load_promise, mic_promise]).then(
             () => {
@@ -224,6 +230,15 @@
 >
 {#await load_promise}
 {:then data}
+
+<div style="position: absolute; top: 1000px;">
+    <pre>
+{$leading_idx}
+{JSON.stringify($next_word, null, 2)}
+{JSON.stringify($timestamps[$leading_idx], null, 2)}
+    </pre>
+</div>
+
     <VoskListener grammar={$all_words.map(w => w.word)} bind:mic_audioContext bind:mute_gain_node bind:source
         on:partial={handlePartial}
     />
@@ -239,16 +254,16 @@
 
         {#key $verse}
         <div class="left_box box" out:fly={{delay: 400, duration: 400, x: 0, y: +60, easing: linear}} in:fly={{delay: 400, duration: 400, x: 0, y: -60, easing: linear}} >    
-            {#each $all_words.filter(w => w.revealed && w.verse === $verse) as word (word.id)}
+            {#each $all_words.slice(0, $leading_idx).filter(w => w.verse === $verse) as word (word.id)}
                 <div class="wordbox"
                     in:receive={{key: word.id}}
                 >
-                    {@html word.written}
+                    {@html word.written.replace(/ /g, '&nbsp;')}
                 </div>
             {/each}
         </div>
         <div class="right_box box" out:fly={{delay: 400, duration: 400, x: 0, y: +60, easing: linear}} in:fly={{delay: 400, duration: 400, x: 0, y: -60, easing: linear}} >
-            {#each $all_words.filter(w => !w.revealed && w.verse === $verse) as word (word.id)}
+            {#each $all_words.slice($leading_idx, $n_words).filter(w => !w.revealed && w.verse === $verse) as word (word.id)}
                 <div class="letterbox" class:we_speak={word.speaker===1} class:they_speak={word.speaker===0}
                     out:send={{key: word.id}}
                     aria-label="Reveal"

@@ -1,9 +1,21 @@
 <script>
 	import '../app.css';
+	import { onMount } from 'svelte';
+	let app;
+	let screen_width;
+	// refresh screen width on resize
+	onMount(() => {
+		screen_width = window.innerWidth;
+		window.addEventListener('resize', () => {
+			screen_width = window.innerWidth;
+		});
+	});
 </script>
 
-<div class="app">
+<div class="app" bind:this={app}>
 	Testing Development Branch
+	<br>
+	Screen Width: {screen_width}
 	<main>
 		<slot />
 	</main>

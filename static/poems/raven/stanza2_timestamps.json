@@ -1,0 +1,350 @@
+[
+    {
+        "conf": 1.0,
+        "end": 0.69,
+        "start": 0.36,
+        "word": "ah"
+    },
+    {
+        "conf": 1.0,
+        "end": 1.77,
+        "start": 0.75,
+        "word": "distinctly"
+    },
+    {
+        "conf": 1.0,
+        "end": 1.98,
+        "start": 1.77,
+        "word": "i"
+    },
+    {
+        "conf": 1.0,
+        "end": 2.79,
+        "start": 1.98,
+        "word": "remember"
+    },
+    {
+        "conf": 1.0,
+        "end": 3.18,
+        "start": 2.88,
+        "word": "it"
+    },
+    {
+        "conf": 1.0,
+        "end": 3.48,
+        "start": 3.21,
+        "word": "was"
+    },
+    {
+        "conf": 1.0,
+        "end": 3.84,
+        "start": 3.57,
+        "word": "in"
+    },
+    {
+        "conf": 1.0,
+        "end": 3.99,
+        "start": 3.87,
+        "word": "the"
+    },
+    {
+        "conf": 1.0,
+        "end": 4.44,
+        "start": 3.99,
+        "word": "bleak"
+    },
+    {
+        "conf": 1.0,
+        "end": 5.19,
+        "start": 4.44,
+        "word": "december"
+    },
+    {
+        "conf": 1.0,
+        "end": 6.06,
+        "start": 5.67,
+        "word": "and"
+    },
+    {
+        "conf": 1.0,
+        "end": 6.42,
+        "start": 6.09,
+        "word": "each"
+    },
+    {
+        "conf": 1.0,
+        "end": 6.99,
+        "start": 6.45,
+        "word": "separate"
+    },
+    {
+        "conf": 1.0,
+        "end": 7.5,
+        "start": 7.02,
+        "word": "dying"
+    },
+    {
+        "conf": 1.0,
+        "end": 8.07,
+        "start": 7.53,
+        "word": "ember"
+    },
+    {
+        "conf": 1.0,
+        "end": 8.49,
+        "start": 8.13,
+        "word": "wrought"
+    },
+    {
+        "conf": 1.0,
+        "end": 8.73,
+        "start": 8.49,
+        "word": "its"
+    },
+    {
+        "conf": 1.0,
+        "end": 9.24,
+        "start": 8.73,
+        "word": "ghost"
+    },
+    {
+        "conf": 1.0,
+        "end": 9.57,
+        "start": 9.24,
+        "word": "upon"
+    },
+    {
+        "conf": 1.0,
+        "end": 9.69,
+        "start": 9.57,
+        "word": "the"
+    },
+    {
+        "conf": 1.0,
+        "end": 10.29,
+        "start": 9.69,
+        "word": "floor"
+    },
+    {
+        "conf": 1.0,
+        "end": 11.61,
+        "start": 11.01,
+        "word": "eagerly"
+    },
+    {
+        "conf": 1.0,
+        "end": 11.76,
+        "start": 11.61,
+        "word": "i"
+    },
+    {
+        "conf": 1.0,
+        "end": 12.21,
+        "start": 11.76,
+        "word": "wished"
+    },
+    {
+        "conf": 1.0,
+        "end": 12.33,
+        "start": 12.24,
+        "word": "the"
+    },
+    {
+        "conf": 1.0,
+        "end": 12.93,
+        "start": 12.33,
+        "word": "morrow"
+    },
+    {
+        "conf": 1.0,
+        "end": 14.1,
+        "start": 13.47,
+        "word": "vainly"
+    },
+    {
+        "conf": 1.0,
+        "end": 14.25,
+        "start": 14.1,
+        "word": "i"
+    },
+    {
+        "conf": 1.0,
+        "end": 14.49,
+        "start": 14.25,
+        "word": "had"
+    },
+    {
+        "conf": 1.0,
+        "end": 14.85,
+        "start": 14.49,
+        "word": "sought"
+    },
+    {
+        "conf": 1.0,
+        "end": 15.0,
+        "start": 14.85,
+        "word": "to"
+    },
+    {
+        "conf": 1.0,
+        "end": 15.57,
+        "start": 15.0,
+        "word": "borrow"
+    },
+    {
+        "conf": 1.0,
+        "end": 16.32,
+        "start": 15.96,
+        "word": "from"
+    },
+    {
+        "conf": 1.0,
+        "end": 16.47,
+        "start": 16.32,
+        "word": "my"
+    },
+    {
+        "conf": 1.0,
+        "end": 17.04,
+        "start": 16.47,
+        "word": "books"
+    },
+    {
+        "conf": 1.0,
+        "end": 17.82,
+        "start": 17.07,
+        "word": "surcease"
+    },
+    {
+        "conf": 1.0,
+        "end": 18.06,
+        "start": 17.85,
+        "word": "of"
+    },
+    {
+        "conf": 1.0,
+        "end": 18.66,
+        "start": 18.06,
+        "word": "sorrow"
+    },
+    {
+        "conf": 1.0,
+        "end": 19.56,
+        "start": 19.02,
+        "word": "sorrow"
+    },
+    {
+        "conf": 1.0,
+        "end": 19.89,
+        "start": 19.56,
+        "word": "for"
+    },
+    {
+        "conf": 1.0,
+        "end": 20.04,
+        "start": 19.89,
+        "word": "the"
+    },
+    {
+        "conf": 1.0,
+        "end": 20.49,
+        "start": 20.04,
+        "word": "lost"
+    },
+    {
+        "conf": 1.0,
+        "end": 21.09,
+        "start": 20.52,
+        "word": "lenore"
+    },
+    {
+        "conf": 1.0,
+        "end": 21.81,
+        "start": 21.45,
+        "word": "for"
+    },
+    {
+        "conf": 1.0,
+        "end": 21.96,
+        "start": 21.81,
+        "word": "the"
+    },
+    {
+        "conf": 1.0,
+        "end": 22.44,
+        "start": 21.96,
+        "word": "rare"
+    },
+    {
+        "conf": 1.0,
+        "end": 22.71,
+        "start": 22.44,
+        "word": "and"
+    },
+    {
+        "conf": 1.0,
+        "end": 23.22,
+        "start": 22.71,
+        "word": "radiant"
+    },
+    {
+        "conf": 1.0,
+        "end": 23.76,
+        "start": 23.25,
+        "word": "maiden"
+    },
+    {
+        "conf": 1.0,
+        "end": 24.33,
+        "start": 24.09,
+        "word": "whom"
+    },
+    {
+        "conf": 1.0,
+        "end": 24.561694,
+        "start": 24.389225,
+        "word": "the"
+    },
+    {
+        "conf": 1.0,
+        "end": 25.29,
+        "start": 24.6,
+        "word": "angels"
+    },
+    {
+        "conf": 1.0,
+        "end": 25.68,
+        "start": 25.32,
+        "word": "name"
+    },
+    {
+        "conf": 1.0,
+        "end": 26.37,
+        "start": 25.68,
+        "word": "lenore"
+    },
+    {
+        "conf": 1.0,
+        "end": 27.54,
+        "start": 26.91,
+        "word": "nameless"
+    },
+    {
+        "conf": 1.0,
+        "end": 28.2,
+        "start": 27.54,
+        "word": "here"
+    },
+    {
+        "conf": 1.0,
+        "end": 28.77,
+        "start": 28.44,
+        "word": "for"
+    },
+    {
+        "conf": 1.0,
+        "end": 29.58,
+        "start": 28.77,
+        "word": "evermore"
+    }
+]

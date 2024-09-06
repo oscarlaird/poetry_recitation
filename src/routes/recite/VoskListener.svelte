@@ -9,7 +9,7 @@
     export let mute_gain_node;
     export let grammar;
     export let source;
-    const sampleRate = 16000;
+    const sampleRate = 48000;
     $: grammar_string = JSON.stringify(['[unk]', ...grammar]);
     // event emitter
     import { createEventDispatcher } from 'svelte';

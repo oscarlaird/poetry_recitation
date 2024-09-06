@@ -57,7 +57,8 @@
         style:left={-(x_frames_clamped-0.5) * 100 + "%"}
         style:top={- (y_frames_clamped-0.5) * 100 + "%"}
         style:height={max_x_frames * 100 + "%"}
-        in:fade={{duration: 600, delay: $stanza > 1 ? 2000 : 0}}
+        in:fade|global={{duration: 600, delay: $stanza > 1 ? 2000 : 0}}
+        out:fade|global={{duration: 600, delay: 0}}
     />
     {#if $victory===-1}
     <div class="image_box" 

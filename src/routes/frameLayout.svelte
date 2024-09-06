@@ -1,9 +1,12 @@
 <script>
     import { stanza } from "./stores.js";
+    import { fade, draw } from 'svelte/transition';
+    import { sineOut, expoOut, quadOut } from 'svelte/easing';
 </script>
 
 
 <div class="mainbox">
+
     <img src="/frame.png" class="goldframe" />
     <div class="topbar bar">
         <slot name="topbar"></slot>

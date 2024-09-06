@@ -1,9 +1,9 @@
 <script>
-    import { stanza, verse } from "../stores.js";
+    import { stanza, verse, poem_store } from "../stores.js";
 </script>
 
 <div class="bar">
-    <div class="poem_title">Settings</div>
+    <div class="poem_title">Choose Level</div>
 </div>
 
 <style>
