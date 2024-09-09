@@ -219,7 +219,8 @@
         "conf": 0.590983,
         "end": 17.083301,
         "start": 16.92,
-        "word": "entreating"
+        "word": "entreating",
+        "alternatives": ["entreating", "entrance", "beating", "repeating"]
     },
     {
         "conf": 1.0,

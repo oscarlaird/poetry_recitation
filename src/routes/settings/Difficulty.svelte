@@ -1,50 +1,48 @@
 <script>
-    import { poem_store } from '../stores.js';
-    export let difficulty = 3;
-    import { test_difficulty_settings } from '../test_difficulty_settings.js';
-    import { tweened } from 'svelte/motion';
-    $: settings = test_difficulty_settings[difficulty - 1];
+    import { level, poem_store, logo, image_filename, settings, lives, victory, leading_idx, stanza, verse } from '../stores.js';
+    export let highest_completed_level = 2;
 
+    import { tweened } from 'svelte/motion';
+    import { onMount } from 'svelte';
+    import { load_logo } from '../recite/loaders.js';
+
+    $: lives.set($settings.lives);
     let perc_qmarks = tweened(0, { duration: 500 });
     let perc_words = tweened(0, { duration: 500 });
-    $:  perc_words.set(Math.min(1.0, difficulty / 3.0));
-    $:  perc_qmarks.set(Math.min(1.0, (difficulty - 1) / 3.0 ));
+    let tweened_lives = tweened(0, { duration: 300 });
+    $:  perc_words.set($settings.words_required);
+    $:  perc_qmarks.set($settings.percent_question_mark);
+    $:  tweened_lives.set($settings.lives);
 
     let letters = "ouamdwipwawomaqacvoflwinnnstcataosogrramcd";
+    letters = letters.slice(0, 3 * 7);
 
     import { expoOut, linear, quadIn, quadOut } from 'svelte/easing';
     import { draw, fade, slide } from 'svelte/transition';
+
+    let title_element;
     // TODO: get the strokes from the poem_store (or perhaps metadata)
-    let strokes = [
-"M 144.95312,341.70508 C 139.50599,342.66167 130.58529,319.40994 132.74902,332.4541 131.191,327.95629 129.3406,325.57633 127.28115,326.79928 125.50946,319.82493 123.54326,317.61638 121.35937,323.50098 120.71386,314.32762 113.55072,311.66224 112.66211,305.96514 112.86908,312.13366 108.88723,292.87783 106.11914,300.55664 106.49337,291.317 102.25874,290.32793 99.74707,280.80762 98.311378,281.02575 95.122431,270.02214 95.154297,265.8457 93.806889,273.30663 92.752274,257.91235 90.947934,258.18231 91.830895,251.13615 88.081395,237.47469 86.089093,241.16809 86.248575,230.02409 82.672048,219.49449 85.387695,208.58594 85.466457,202.02108 93.375228,190.47597 93.373047,188.58691 90.285319,193.25016 85.630132,201.88505 90.258265,191.83414 92.247177,186.08847 95.26214,180.21196 89.239258,188.78906 81.173726,200.39756 89.857863,183.93431 90.384692,181.69765 85.303098,186.51645 84.799418,182.90266 85.614258,180.58301 77.560058,187.85538 91.586992,170.50296 81.105468,176.24316 79.298221,171.49704 93.05401,154.69664 84.822265,162.61816 77.240634,163.74635 92.57042,147.06785 85.159179,153.08496 94.326121,147.97591 88.66034,148.53368 86.206148,145.94762 92.87777,141.54571 81.422758,145.05159 87.402343,139.14648 85.545859,133.05639 91.043218,135.05069 89.945312,127.45703 99.277513,119.09676 100.94884,108.86754 111.62109,101.08398 117.29519,96.453628 122.233,93.302554 120.57715,89.330199 125.07721,90.405763 130.18417,92.441889 130.60828,88.792183 139.7422,90.918312 142.48978,90.388657 151.66893,93.078631 159.49683,97.581945 168.06595,102.43046 177.89566,99.91557 181.6357,99.287667 190.69972,100.02493 186.16309,101.64258 195.25732,103.69421 205.07484,105.86695 211.81543,113.06738 213.1378,118.79549 215.40541,127.30393 210.18652,117.78613 204.78863,122.2497 186.83675,124.29762 187.22266,125.69238 186.98234,129.2863 182.4695,125.21769 183.76953,129.35742 176.61803,129.48238 184.84471,132.41696 180.29492,133.86621 185.37003,136.07052 177.56174,136.748 182.94627,141.08286 179.79081,150.22954 187.46953,147.12412 196.08735,150.5767 211.08466,154.0515 215.65148,159.02081 224.29036,165.10521 230.33183,173.13126 228.59935,168.52916 221.83907,169.28405 237.97578,173.54422 233.13761,173.57728 240.04811,178.83153 253.81785,186.17392 255.42402,191.89364 261.89797,197.84214 254.77729,197.67916 271.00069,211.10883 274.11889,220.80225 270.17205,218.30764 267.28969,213.15057 260.64209,209.74414 261.90235,215.39365 270.95175,225.13163 271.98756,233.27601 277.13407,238.53834 283.63634,247.01193 282.9863,254.85032 280.93115,260.10382 274.08569,252.69631 281.35051,263.99299 282.93687,269.20374 295.40055,275.00977 283.88178,270.20178 289.22924,277.83652 304.15946,294.13736 306.93355,302.80493 314.2767,314.04769 318.00692,320.7256 325.99224,332.47898 326.80161,334.12823 329.91751,339.19093 330.36328,340.95898",
-"M 137.18148,110.06766 C 121.50315,114.26214 150.61031,122.06152 140.34463,110.78283 L 138.64173,110.40498 Z",
-"M 207.37287,116.9402 C 190.53179,112.53119 173.24561,117.75224 156.45389,119.69346 154.67558,119.39582 153.43146,119.8376 151.86257,120.34453",
-"M 106.73687,136.0055 C 118.01292,146.73259 134.77561,146.41846 148.95174,150.63378 154.32012,151.66343 159.39493,154.48132 163.76911,157.71278",
-"M 97.445391,180.19484 C 105.96505,171.86658 114.15452,160.96792 125.93955,157.81164 141.3963,153.21635 158.66825,155.79379 170.73728,166.98423",
-"M 91.816849,200.72372 C 91.786011,211.29166 91.645042,223.13653 97.081637,232.29509 102.5386,236.97265 102.35829,224.24637 102.31222,233.1066 104.20066,243.63232 110.01611,252.89464 114.25238,262.52935 116.6008,255.53542 118.6473,273.11511 121.13196,276.79938 130.60586,280.79595 128.2356,292.89676 133.0072,300.93294 138.10876,311.5482 146.78281,319.70733 154.65617,328.1404 160.21515,332.0041 164.42014,336.87504 167.53528,342.82318",
-"M 108.09066,244.00294 C 116.28045,243.40942 120.04946,233.84925 128.38697,233.79009 131.55306,227.03321 134.07057,220.8303 142.26042,220.49532 149.99019,214.40122 157.17293,205.75221 158.96932,195.97126 158.20852,188.50573 166.52042,185.58718 163.60625,178.03524 171.57004,187.47267 180.04581,168.38788 189.98739,176.77172 203.17921,178.68313 217.05764,180.02328 228.15606,188.21099 238.18019,191.69193 242.11645,199.15265 249.77099,205.52817 253.1377,209.07275 258.0398,212.50955 260.68969,214.40527",
-"M 161.08017,204.48851 C 165.02894,216.97758 178.56449,220.92656 187.17819,229.03208 191.94588,232.14867 194.20484,224.77945 196.29182,232.6243 205.23843,247.34549 216.62637,260.41926 228.37063,272.94322 239.19637,270.15418 246.32419,282.26647 252.50796,289.07602 257.88104,299.77362 267.45685,306.55578 276.63814,313.52823 284.40921,322.08539 290.6458,332.98198 302.19102,336.97042 306.81725,337.07689 307.30271,331.5599 310.76109,328.90354 308.831,318.79839 325.17135,338.5706 327.02169,339.58803",
-"M 205.95245,275.6287 C 216.19627,282.66348 228.63324,287.13293 236.75587,296.80727 242.25471,306.00612 249.9632,313.47357 255.38411,322.76999 262.18063,333.79545 278.09434,330.17432 285.85482,340.54097",
-]
+    onMount(() => {
+        // reset the game when we go to settings
+        victory.set(0);
+        leading_idx.set(0);
+        stanza.set(1);
+        verse.set(0);
+        load_logo();
+    });
 
 </script>
 
-<div class="container">
+<div class="container"
+>
+    <div class="image_bg"
+         style={`background-image: url("${$image_filename}"); background-size: cover;`}
+    />
     <div class="poem_info_box">
-        <div class="title_icon_box">
-            <div class="title">{$poem_store.title}</div>
-            <div class="author_listen_box">
-                <div class="author">{$poem_store.author}</div>
-                <div class="listen_read">
-                    <a href="https://www.poetryfoundation.org/poems/48860/the-raven">Listen 🕪</a> 
-                    &nbsp &nbsp
-                    <a href="/recite">Read ¶</a>
-                </div>
-            </div>
-        </div>
-        <svg class="icon" viewBox="80 85 265 255" style:border="1px solid black">
-            {#each strokes as d}
-            <path d={d} fill=none stroke=black stroke-width=2
+        <div class="title_box" bind:this={title_element}>{$poem_store.title}</div>
+        <svg class="icon" viewBox={$poem_store.logo_viewbox} >
+            {#each $logo as d}
+            <path d={d} fill=none stroke=black stroke-width=3
                 in:draw|global={{duration: 3000, easing: expoOut }}
                 />
             {/each} 
@@ -52,74 +50,64 @@
     </div>
 
 
-        <div class="stars_box" in:fade|global={{duration: 1000, axis: 'x'}}>
-            {#each Array.from({ length: 5 }) as _, i}
-                <svg class="star" 
-                    on:click={() => difficulty = i + 1}
-                    viewBox="0 -2 115 115" >
-                    <path d="M 22.882456,109.22232 29.737531,70.253487 1.5221917,42.51442 40.702083,36.991954 58.364484,1.5857291 75.723914,37.141484 114.85522,42.9983 86.404044,70.495431 92.926117,109.52137 57.982896,90.959775 22.882456,109.22232"
-                        stroke=black stroke-width=4 fill=none class:filled={i < difficulty}
-                        />
+    <div class="stars_box" in:fade|global={{duration: 1000, axis: 'x'}}>
+        <div>Level {$level}</div>
+        {#each Array.from({ length: 5 }) as _, i}
+            <svg class="star" 
+                on:click={() => $level = i + 1}
+                viewBox="0 -2 115 115" >
+                <path d="M 22.882456,109.22232 29.737531,70.253487 1.5221917,42.51442 40.702083,36.991954 58.364484,1.5857291 75.723914,37.141484 114.85522,42.9983 86.404044,70.495431 92.926117,109.52137 57.982896,90.959775 22.882456,109.22232"
+                    stroke={i === $level-1 ? "red" : "black"}
+                    stroke-width={i === $level-1 ? 10 : 4}
+                    fill={i <= highest_completed_level-1 ? "gold" : (i <= $level-1 ? "lightyellow" : "rgba(0,0,0,0)")}
+                    />
+            </svg>
+        {/each}
+    </div>
+    <div class="settings_stats">
+        <div class="heartboxes">
+            <center>Lives</center>
+            <div class="heartsymbols" >
+                {#each Array.from({ length: 3 }) as _, i}
+                <svg viewBox="-3 -3 73 73" width="100%" height="100%">
+                    <defs>
+                        <linearGradient id={i}grad x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset={($tweened_lives-i)/1.0 * 100}% style="stop-color:rgb(255,0,0);stop-opacity:1" />
+                            <stop offset="0%" style="stop-color:rgba(0,0,0,0);stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M 55.538727,2.5013793 C 62.852607,5.7954098 64.717147,17.321224 63.422767,25.237539 60.709317,41.832788 42.528937,47.541787 32.575357,65.153987 22.621771,47.460247 4.463432,41.742226 1.727932,25.156002 0.42859202,17.277654 2.200245,5.7823108 9.4740818,2.4886863 17.039308,-0.93688074 28.080327,3.4771943 32.506407,11.986918 36.932487,3.4898873 47.968097,-0.90828874 55.538727,2.5013793 Z"
+                        stroke="black" stroke-width="8" fill={`url(#${i}grad)`}
+                    />
                 </svg>
-            {/each}
+                {/each}
+            </div>  
         </div>
-        <div class="settings_stats">
-            <div class="openboxes">
-                {#each "abc" as l}
-                    <div class="letterbox_outer">
-                        <div class="letterbox_inner">
-                            {l}
-                        </div>
-                    </div>
-                {/each}
-                <!-- shadow -->
-                <div class="openboxes shadow" style:width={$perc_words * 100 + "%"}>
-                    {#each "abc" as l}
-                        <div class="letterbox_outer">
-                            <div class="letterbox_inner">
-                                {l}
-                            </div>
-                        </div>
-                    {/each}
-                </div>
-            </div>
-            <div class="questionboxes">
-                {#each "???" as l}
-                    <div class="letterbox_outer">
-                        <div class="letterbox_inner">
-                            {l}
-                        </div>
-                    </div>
-                {/each}
-                <!-- shadow -->
-                <div class="questionboxes shadow" style:width={$perc_qmarks * 100 + "%"}>
-                    {#each "???" as l}
-                        <div class="letterbox_outer">
-                            <div class="letterbox_inner">
-                                {l}
-                            </div>
-                        </div>
-                    {/each}
-                </div>
-            </div>
-            <div class="heartboxes">
-                {#each "abc" as l}
-                    <div class="letterbox_outer">
-                        <div class="letterbox_inner">
-                            {l}
-                        </div>
-                    </div>
-                {/each}
+        <div class="openboxes">
+            <center>You Speak</center>
+            <div>
+                <div class=progress 
+                style:background={`linear-gradient(to right, red ${$perc_words * 100}%, transparent 0%)`}
+                ></div>
             </div>
         </div>
+        <div class="questionboxes">
+            <center>Question Marks</center>
+            <div>
+                <div class=progress
+                style:background={`linear-gradient(to right, red ${$perc_qmarks * 100}%, transparent 0%)`}
+                ></div>
+            </div>
+        </div>
+    </div>
 
-    {#key difficulty}
-    <div class="letter_grid"
-    >
-        {#each letters as letter}
-            <div class="letter"
-                class:we_speak={Math.random() < settings.words_required} 
-            >{Math.random() < settings.percent_question_mark ? '?' : letter}</div>
+{#key $level}
+<div class="letter_grid"
+>
+    {#each letters as letter}
+        <div class="letter"
+                class:we_speak={Math.random() < $settings.words_required} 
+            >{Math.random() < $settings.percent_question_mark ? '?' : letter}</div>
         {/each}
     </div>
     {/key}
@@ -127,148 +115,170 @@
 
 <style>
     .container {
-        width: 100%;
-        aspect-ratio: 1/1;
-        border: 1px solid black;
+        height: 100%;
         font-family: 'Times New Roman', Times, serif;
+        font-weight: bold;
+    }
+    .image_bg {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.4;
+        filter: blur(2px) contrast(0.7) saturate(0.8);
     }
     /* poem info */
     .poem_info_box {
-        border: 1px solid black;
         height: 33%;
         display: flex;
         flex-direction: row;
-        padding: 3%;
         box-sizing: border-box;
     }
-    .title_icon_box {
+    .title_box {
         height: 100%;
+        padding: 8px;
+        box-sizing: border-box;
         flex: 1;
+        font-size: 1.7rem;
         display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
-        border: 1px solid black;
-    }
-    .title {
-        flex: 1;
-        border: 1px solid black;
-        font-size: 1.7em;
-        display: flex;
-        align-items: center;
+        text-align: center;
         color: black;
+        font-weight: bold;
+        text-shadow: 2px 2px 2px rgb(243, 243, 243);
     }
     .icon {
-        border: 1px solid black;
         height: 100%;
         aspect-ratio: 1/1;
-    }
-    .author_listen_box {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        border: 1px solid black;
-        align-items: center;
-    }
-    .author {
-        border: 1px solid black;
-        font-size: 1.0rem;
-    }
-    .listen_read {
-        border: 1px solid black;
-        font-size: 0.8em;
     }
     /* difficulty stars and difficulty stats */
     .stars_box {
-        height: 16%;
-        border: 2px solid red;
+        height: 11%;
         display: flex;
         flex-direction: row;
         justify-content: space-around;
+        align-items: center;
+        font-size: 1.2rem;
+        padding-left: 10px;
     }
     .star {
-        margin: 2%;
-        aspect-ratio: 1/1;
+        max-height: 75%;
         cursor: pointer;
     }
-    .star path {
-        fill: rgba(0, 0, 0, 0);
+    .star:hover {
+        transform: scale(1.2);
     }
     .star path:hover {
-        fill: red;
-    }
-    .star path.filled {
-        fill: black;
-    }
-    .filled:hover {
-        background-color: black;
+        stroke: red;
+        stroke-width: 10;
     }
     .settings_stats {
-        border: 2px solid red;
         height: 16%;
-        width: 99%;
+        box-sizing: border-box;
+        padding-top: 6px;
         display: flex;
         flex-flow: row nowrap;
         justify-content: space-around;
         align-items: center;
+        font-size: 1rem;
     }
     .openboxes, .questionboxes, .heartboxes {
-        aspect-ratio: none;
-        color: lightgray;
+        font-weight: bold;
         position: relative;
-        height: 60%;
         display: flex;
-        flex-flow: row nowrap;
-        border: 2px solid green;
+        flex-direction: column;
+        gap: 3px;
+        font-size: 1.1em;
     }
-    .openboxes .shadow, .questionboxes .shadow {
+    .openboxes div, .questionboxes div {
+        height: 1em;
+    }
+    .progress {
+        width: 100%;
+        margin: 0.3em 0;
+        max-height: 0.4em;
+        border-radius: 5px;
+        border: 2px solid black;
         box-sizing: border-box;
-        position: absolute;
-        left: 0;
-        height: 100%;
-        color: black;
-        width: 50%;
-        overflow: hidden;
-        background-color: aqua;
+    }
+    .heartsymbols {
+        border: none;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        height: 1em;
     }
     /* letter grid */
     .letter_grid {
-        height: 30%;
-        border: 4px solid green;
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: center;
-        overflow: hidden;
+        height: 35%;
+        display: grid;
+        columns: auto;
+        /* 3 x 7 grid */
+        grid-template-columns: repeat(7, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        margin: 1%;
+        gap: 1%;
     }
     .letter {
-        height: calc(33.3%);
-        aspect-ratio: 1/1;
         border: 1px solid;
-        color: gray;
-        border-color: gray;
-        /* center letter horizontally and vertically */
+        color: rgb(31, 31, 31);
+        border-color: rgb(31, 31, 31);
+        /* center the text horizontally and vertically */
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 2rem;
-    }
-    .letterbox_outer {
-        height: 100%;
-        aspect-ratio: 1/1;
-        border: 1px solid pink;
-    }
-    .letterbox_inner {
-        margin: 3px;
-        aspect-ratio: 1/1;
-        border: 3px solid;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        border-width: 2px;
         font-weight: bold;
+        filter: blur(1px);
+        font-size: 1.3rem;
     }
     .we_speak {
+        border-width: 3px;
         color: black;
         border-color: black;
+        filter: none;
+        /* background-color: rgba(255, 255, 255, 0.6); */
+        filter: none;
+        backdrop-filter: brightness(1.2);
+    }
+    @media (min-width: 500px)  {
+        .title_box {
+            font-size: 2.4rem;
+        }
+        .stars_box {
+            font-size: 1.5rem;
+        }
+        .settings_stats {
+            font-size: 1.2rem;
+        }
+        .letter {
+            font-size: 1.4rem;
+        }
+        .letter_grid {
+            margin: 2%;
+            gap: 2%;
+        }
+    }
+    @media (min-width: 768px) {
+        .title_box {
+            padding: 10px;
+            font-size: 3rem;
+        }
+        .settings_stats {
+            font-size: 1.5rem;
+        }
+        .letter {
+            font-size: 2.6rem;
+        }
+    }
+    @media (min-width: 1024px) {
+        .settings_stats {
+            font-size: 1.7rem;
+        }
+        .stars_box {
+            font-size: 2rem;
+        }
     }
 </style>

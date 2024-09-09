@@ -1,14 +1,14 @@
 <script>
     import { goto } from '$app/navigation';
     import { onMount } from 'svelte';
-    import VoskListener from './VoskListener.svelte';
     import { tick } from 'svelte';
     import { tweened } from 'svelte/motion';
-    import { linear } from 'svelte/easing';
-    import { stanza, verse, leading_idx, audio_filename, all_words, timestamps, n_words, next_word, video_prog_value, lives, victory, settings } from '../stores.js';
+    import { cubicOut, linear, quadIn, quadOut, sineInOut, } from 'svelte/easing';
+    import { lose_word, partial_vosk_result, stanza, verse, leading_idx, audio_filename, all_words, timestamps, parsed_stanzas, n_words, next_word, video_prog_value, lives, victory, settings } from '../stores.js';
     import { make_spring, tick_spring } from "./spring_velocity_control";
     import { load_stanza, load_mp3, loadModel } from './loaders';
-    import { crossfade, fade, fly } from "svelte/transition";
+    import { crossfade, fade, } from "svelte/transition";
+    import { flip } from 'svelte/animate';
     const [send, receive] = crossfade({
         duration: d => Math.sqrt(d * 200)
     });
@@ -19,10 +19,6 @@
     let time_per_word = 6000; // 6 seconds
     let show_timer_threshold = 3000; // 3 seconds
     const remaining_time = tweened(time_per_word, { duration: time_per_word, easing: linear });
-    // microphone
-    let mic_audioContext;  // audio context for the microphone for the vosk listener
-    let mute_gain_node;  // gain node in between the microphone and the vosk listener
-    let source;
     // narrator audio ctx
     let narrator_audioContext;
     let narrator_audioBuffer;
@@ -55,23 +51,34 @@
         // and we don't want to replace w/ a copied dict since
         // we want to mutate the underlying all_words
         leading_idx.update(i => i + 1);
-        remaining_time.update((target_val, t) => {return time_per_word}, { duration: 0, easing: linear }); // reset the timer to full.
-        // move to the next stanza
+        remaining_time.update((target_val, t) => {return time_per_word}, { duration: 0 }); // reset the timer to full.
+        // reached end of stanza
         if ($leading_idx >= $n_words) {
             // allow for the revealed word to transition before moving to the next stanza
             await tick();
             verse.update(v => v + 1);
+            // exit to main menu if we have reached the end of the poem
+            if ($stanza >= $parsed_stanzas.length) {
+                console.log('victory');
+                victory.set(1);
+                return;
+            }
             // allow for the verse to transition before updating the stanza
             await tick();
+            // block for 200ms between stanzas
+            await new Promise(resolve => setTimeout(resolve, 200));
             stanza.update(s => s + 1);
             verse.update(v => 0);
+            // restart the idx indicator
             leading_idx.set(0);
             return;  // we are done with the current stanza; don't do anything else
         }
         // move to the next line if the verse has changed or if we have reach the end of the stanza
-        if ($leading_idx >= $n_words || $next_word.verse !== $verse) {
+        if ($next_word.verse !== $verse) {
             // allow for the revealed word to transition before moving to the next line
             await tick();
+            // sleep 200ms
+            await new Promise(resolve => setTimeout(resolve, 200));
             verse.update(v => v + 1);
         }
         // start the narrator's turn if the user has finished speaking their last word
@@ -83,21 +90,29 @@
             // remaining_time.update((target_val, t) => {return time_per_word}, { duration: 0, easing: linear });
             remaining_time.update((target_val, t) => {return 0}, { duration: time_per_word, easing: linear })
             .then(() => {
-                revealNextWord();
                 lives.update(l => l - 1);
                 if ($lives === 0) {
-                    console.log('game over');
+                    lose_word.set($next_word);
                     victory.set(-1);
                 }
+                // we'd like to just change the upcoming word's speaker to 0 and run the narrator's turn
+                revealNextWord();
             });
         }
     }
-    async function handlePartial(e) {
+    async function handlePartial(partial) {
         let partial_words;
-        const partial = e.detail;
         partial_words = partial.split(" ");
-        // reveal the leading word(s) if they have been spoken
-        while (partial_words.includes($next_word.word)) {
+        let spoken;
+        // reveal up to ten leading word(s) if they have been spoken
+        for (let i = 0; i < 10; i++) {
+            spoken = $next_word && partial_words.includes($next_word.word);
+            // spoken = spoken || $timestamps?.[leading_idx]?.alternatives?.some(a => partial_words.includes(a.word));
+            spoken = spoken || ($timestamps && $timestamps.length > $leading_idx && $timestamps[$leading_idx]?.alternatives?.some(a => partial_words.includes(a)));
+            console.log($timestamps, $leading_idx, $timestamps[$leading_idx]);
+            if (!spoken) {
+                break;
+            }
             if ($next_word.speaker === 0) {
                 // stop if it is the narrator's turn
                 break;
@@ -105,6 +120,8 @@
             await revealNextWord();
         }
     }
+    $: handlePartial($partial_vosk_result); // trigger when vosk's partial result changes
+    $: console.log($partial_vosk_result);
     //
     async function play_clip(start_word_idx, stop_word_idx) {
         // play the audio from start_word_idx to stop_word_idx
@@ -133,6 +150,9 @@
         return finish_promise;
     }
     async function narrator_turn() {
+        if ($victory === -1) {
+            return; // don't narrate if the user has lost
+        }
         // first we assert that next_word.speaker === 0
         console.assert($next_word.speaker === 0, 'It is not the narrator\'s turn');
         // turn off the user's microphone
@@ -145,30 +165,7 @@
         stop_word_idx -= 1; // we don't want to include the first word of the next turn
         // stop_word_idx is the last word that should be spoken
         // play the clip and wait for it to finish
-        // mic_audioContext.suspend();
-        mute_gain_node.gain.setValueAtTime(0.0, mic_audioContext.currentTime);
         await play_clip(start_word_idx, stop_word_idx);
-        mute_gain_node.gain.setValueAtTime(1.0, mic_audioContext.currentTime);
-        // mic_audioContext.resume();
-        // reset the user's timer
-    }
-    async function load_mic() {
-        // set up the microphone
-        const sampleRate = 16000;
-        console.log('A');
-        const mediaStream = await navigator.mediaDevices.getUserMedia({
-            video: false,
-            audio: {
-                echoCancellation: true,
-                noiseSuppression: true,
-                channelCount: 1,
-                sampleRate
-            },
-        });
-        console.log('B');
-        mic_audioContext = new AudioContext();
-        source = mic_audioContext.createMediaStreamSource(mediaStream);
-        mute_gain_node = mic_audioContext.createGain();
     }
     async function load_data() {
         await Promise.all([
@@ -188,18 +185,16 @@
         console.log('loaded stanza words', $all_words);
     }
     let load_promise = new Promise((resolve) => {});
-    let mic_promise;
     onMount(async () => {
         // load the lyrics, timestamps, and vosk model
         load_promise = load_data();
-        mic_promise = load_mic();
         // narrator audio ctx
         narrator_audioContext = new AudioContext();
         narrator_audioBuffer = await fetch($audio_filename)
             .then(response => response.arrayBuffer())
             .then(buffer => narrator_audioContext.decodeAudioData(buffer));
         // narrator's turn once the data is loaded (so we can see the words) and the mic is ready (so we can mute it)
-        await Promise.all([load_promise, mic_promise]).then(
+        await Promise.all([load_promise]).then(
             () => {
                 // if $stanza>1, then sleep two seconds
                 if ($next_word.speaker === 0) {
@@ -224,24 +219,8 @@
     });
 </script>
 
-<!-- TODO why does the out:fade require this wrapper. It can't be on bar. -->
-<div class="wrapper"
-    out:fade={{delay: 0, duration: 400}}
->
 {#await load_promise}
 {:then data}
-
-<div style="position: absolute; top: 1000px;">
-    <pre>
-{$leading_idx}
-{JSON.stringify($next_word, null, 2)}
-{JSON.stringify($timestamps[$leading_idx], null, 2)}
-    </pre>
-</div>
-
-    <VoskListener grammar={$all_words.map(w => w.word)} bind:mic_audioContext bind:mute_gain_node bind:source
-        on:partial={handlePartial}
-    />
     <div class="bar"
         in:fade={{delay: $stanza>1 ? 2000 : 0, duration: 400}}
     >
@@ -252,20 +231,14 @@
             <progress class="word_count" value={$leading_idx} max={$n_words}></progress>
         -->
 
-        {#key $verse}
-        <div class="left_box box" out:fly={{delay: 400, duration: 400, x: 0, y: +60, easing: linear}} in:fly={{delay: 400, duration: 400, x: 0, y: -60, easing: linear}} >    
-            {#each $all_words.slice(0, $leading_idx).filter(w => w.verse === $verse) as word (word.id)}
-                <div class="wordbox"
-                    in:receive={{key: word.id}}
-                >
-                    {@html word.written.replace(/ /g, '&nbsp;')}
-                </div>
-            {/each}
-        </div>
-        <div class="right_box box" out:fly={{delay: 400, duration: 400, x: 0, y: +60, easing: linear}} in:fly={{delay: 400, duration: 400, x: 0, y: -60, easing: linear}} >
+        <!-- {#key $verse} -->
+        <div class="right_box box" in:fade={{delay: 400, duration: 600, x: 0, y: -60, easing: linear}}
+        >
             {#each $all_words.slice($leading_idx, $n_words).filter(w => !w.revealed && w.verse === $verse) as word (word.id)}
                 <div class="letterbox" class:we_speak={word.speaker===1} class:they_speak={word.speaker===0}
+                    animate:flip={{duration: 350}}
                     out:send={{key: word.id}}
+                    in:fade={{duration: 300, easing: quadIn}}
                     aria-label="Reveal"
                     role="button"
                     tabindex="0"
@@ -275,13 +248,28 @@
                     {word.initial}
                 </div>
             {/each}
+            <!-- invisible place holder letter box to maintain the height of this div -->
+            <div class="letterbox" style="visibility: hidden;">
+                A
+            </div>
         </div>
-        {/key}
+        <div class="left_box box" out:fade={{delay: 200, duration: 200, x: 0, y: +60, easing: linear}}
+                                  in:fade={{delay: 500, duration: 0, x: 0, y: -60, easing: linear}}
+         >    
+            {#each $all_words.slice(0, $leading_idx).filter(w => w.verse === $verse) as word (word.id)}
+                <div class="wordbox"
+                    in:receive={{key: word.id}}
+                    out:fade={{duration: 300, easing: sineInOut}}
+                >
+                    {@html word.written.replace(/ /g, '&nbsp;')}
+                </div>
+            {/each}
+        </div>
+        <!-- {/key} -->
     </div>
     <!--
 -->
 {/await}
-</div>
 
 <style>
     @font-face {
@@ -294,42 +282,51 @@
         height: 100%;
     }
     .bar {
+        font-size: 2rem;
         height: 100%;
-        background-color: white;
-        box-shadow: 0 0 15px 15px white;
         position: relative;
         /* font */
         text-align: center;
         font-family: 'Kingthings Calligraphica 2'; 
         /* flex */
         display: flex;
-        flex-direction: row;
-        justify-content: right;
+        /* flex-direction: row; */
+        flex-direction: column;
+        /* justify-content: right; */
         align-items: center;
         /* centered text */
         text-justify: center;
     }
     .box {
         display: flex;
-        position: absolute;
-        margin: 10px;
     }
     .left_box {
+        width: 100%;
+        height: 100%;
+        top: 0;
         left: 0;
         justify-content: left;
-        flex-wrap: nowrap;
+        align-content: flex-start;
+        flex-wrap: wrap;
     }
     .right_box {
-       position: absolute;
-       right: 0;
-       justify-content: right; 
+       /* position: absolute; */
+       width: 100%;
+       justify-content: left; 
+       align-content: center;
+       display: flex;
+       flex-flow :row nowrap;
     }
     .letterbox {
         border: 1px solid black;
         font-size: 1.3em;
-        width: 1em;
-        margin: 3px;
+        min-width: 1.3em;
         aspect-ratio: 1/1;
+        margin: 5px 5px;
+        /* Center text horizontally and vertically; */
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
     .we_speak {
         color: black;
@@ -341,16 +338,6 @@
     }
     .wordbox {
         flex: 0 0 auto; /* don't shrink, even if we go past the end of the line */
-    }
-    @media (min-width: 320px) {
-        .bar {
-            font-size: 1em;
-        }
-    }
-    @media (min-width: 768px) {
-        .bar {
-            font-size: 1.5em;
-        }
     }
     progress {
         display: block;
@@ -380,5 +367,36 @@
         background-color: rgb(63, 119, 58);
     }
     /* set the color of the progress bar for the timer */
+    @media (min-width: 768px) {
+        /* smaller font on tablet since now we have the frame */
+        .bar {
+            font-size: 1.5rem;
+        }
+        /* Put the words and letters on the same line */
+        .left_box {
+            position: absolute;
+            left: 0;
+            justify-content: left;
+        }
+        .right_box {
+            height: 100%;
+            position: absolute;
+            right: 0;
+            top: 0;
+            justify-content: right;
+            /* border: 5px solid red; */
+        }
+        .right_box .letterbox:last-child {
+            /* hide the placeholder letterbox since we are putting everything on the same line */
+            display: none;
+        }
+    }
+    @media (min-width: 1024px) {
+        /* We again increase the font size for desktop */
+        .bar {
+            font-size: 2rem;
+        }
+    }
+
 
 </style>

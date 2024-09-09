@@ -21,6 +21,7 @@
 		"mp3tag.js": "^3.11.0",
 		"png-chunks-encode": "^1.0.0",
 		"png-chunks-extract": "^1.0.0",
+		"textfit": "^2.4.0",
 		"tone": "^15.0.4",
 		"vosk-browser": "^0.0.8"
 	}

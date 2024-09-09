@@ -1,0 +1,165 @@
+[
+    {
+        "conf": 0.564277,
+        "end": 0.72,
+        "start": 0.45,
+        "word": "he"
+    },
+    {
+        "conf": 1.0,
+        "end": 1.2,
+        "start": 0.746143,
+        "word": "gives"
+    },
+    {
+        "conf": 1.0,
+        "end": 1.44,
+        "start": 1.2,
+        "word": "his",
+        "alternatives": ["harness", "is"]
+    },
+    {
+        "conf": 1.0,
+        "end": 1.95,
+        "start": 1.44,
+        "word": "harness"
+    },
+    {
+        "conf": 1.0,
+        "end": 2.424527,
+        "start": 1.98,
+        "word": "bells"
+    },
+    {
+        "conf": 0.69319,
+        "end": 2.49,
+        "start": 2.43,
+        "word": "a",
+        "alternatives": ["shake"]
+    },
+    {
+        "conf": 1.0,
+        "end": 3.06,
+        "start": 2.49,
+        "word": "shake"
+    },
+    {
+        "conf": 1.0,
+        "end": 3.27,
+        "start": 3.12,
+        "word": "to",
+        "alternatives": ["ask"]
+    },
+    {
+        "conf": 1.0,
+        "end": 3.69,
+        "start": 3.27,
+        "word": "ask"
+    },
+    {
+        "conf": 1.0,
+        "end": 3.81,
+        "start": 3.69,
+        "word": "if",
+        "alternatives": ["there"]
+    },
+    {
+        "conf": 1.0,
+        "end": 4.02,
+        "start": 3.81,
+        "word": "there",
+        "alternatives": ["is"]
+    },
+    {
+        "conf": 0.5,
+        "end": 4.2,
+        "start": 4.02,
+        "word": "is",
+        "alternatives": ["some", "mistake"]
+    },
+    {
+        "conf": 1.0,
+        "end": 4.53,
+        "start": 4.23,
+        "word": "some",
+        "alternatives": ["mistake"]
+    },
+    {
+        "conf": 1.0,
+        "end": 5.31,
+        "start": 4.53,
+        "word": "mistake"
+    },
+    {
+        "conf": 1.0,
+        "end": 6.03,
+        "start": 5.82,
+        "word": "the"
+    },
+    {
+        "conf": 1.0,
+        "end": 6.51,
+        "start": 6.03,
+        "word": "only"
+    },
+    {
+        "conf": 1.0,
+        "end": 6.84,
+        "start": 6.51,
+        "word": "other"
+    },
+    {
+        "conf": 1.0,
+        "end": 7.459773,
+        "start": 6.84,
+        "word": "sounds"
+    },
+    {
+        "conf": 1.0,
+        "start": 7.46,
+        "end": 7.6,
+        "word": "the"
+    },
+    {
+        "conf": 1.0,
+        "end": 8.16,
+        "start": 7.614986,
+        "word": "sweep"
+    },
+    {
+        "conf": 1.0,
+        "end": 8.88,
+        "start": 8.67,
+        "word": "of"
+    },
+    {
+        "conf": 1.0,
+        "end": 9.27,
+        "start": 8.91,
+        "word": "easy"
+    },
+    {
+        "conf": 1.0,
+        "end": 9.72,
+        "start": 9.27,
+        "word": "wind"
+    },
+    {
+        "conf": 1.0,
+        "end": 10.02,
+        "start": 9.75,
+        "word": "and"
+    },
+    {
+        "conf": 1.0,
+        "end": 10.44,
+        "start": 10.08,
+        "word": "downy"
+    },
+    {
+        "conf": 1.0,
+        "end": 11.040000000000001,
+        "start": 10.44,
+        "word": "flake"
+    }
+]

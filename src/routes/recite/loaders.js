@@ -1,9 +1,18 @@
 import { get_all_slopes } from './keyframes.js';
-import { parsed_stanzas, timestamps, timestamps_filename, words_filename, audio_filename, keyframes_filename, fulltext_filename, keyframes, slopes, settings, all_words } from '../stores.js';
+import { parsed_stanzas, timestamps, timestamps_filename, words_filename, audio_filename, logo, keyframes_filename, fulltext_filename, logo_filename, keyframes, slopes, settings, all_words } from '../stores.js';
 import { get } from 'svelte/store';
 import MP3Tag2 from 'mp3tag.js';
 import * as Vosk from 'vosk-browser';
 
+
+async function load_logo() {
+    // load logo from the json file
+    fetch(get(logo_filename))
+        .then(response => response.json())
+        .then(data => {
+            logo.set(data);
+    });
+}
 
 async function load_keyframes() {
     // load keyframes from the json file
@@ -23,21 +32,31 @@ function split_verses(stanza) {
     // split on newline separators
     return stanza.split(/\n/);
 }
+
 function parse_verse(verse) {
-    // return {word: "tis", written: "’Tis "}
-    // a word_segment includes all punctuation and whitespace before the next word
-    let word_segments = verse.match(/\w+\W*/g)
-    // the first word_segment should also include any leading punctuation
+    // Return {word: "tis", written: "’Tis "}
+    // A word_segment includes all punctuation and whitespace before the next word
+    let word_segments = verse.match(/\b\w+(?:'\w+)?\W*/g)
+    
+    // The first word_segment should also include any leading punctuation
     let nonword_prefix = verse.match(/^\W*/)
-    // trim leading whitespace
+    
+    // Trim leading whitespace
     nonword_prefix = nonword_prefix ? nonword_prefix[0].trim() : ""
     word_segments[0] = nonword_prefix + word_segments[0]
-    // the words should be lowercase
-    let words = word_segments.map(word => word.match(/\w+/)[0].toLowerCase())
-    // zip
-    return words.map((word, i) => {return {word: word, written: word_segments[i]}})
     
+    // The words should be lowercase, allowing for contractions
+    let words = word_segments.map(word => word.match(/\b\w+(?:'\w+)?/)[0].toLowerCase())
+
+    // Remove apostrophes from the words for recognition in Vosk
+    words = words.map(word => word.replace(/'/, ""))
+    
+    // Zip words and their corresponding written segments
+    return words.map((word, i) => {
+        return {word: word, written: word_segments[i]}
+    })
 }
+
 function parse_poem(poem) {
     let stanzas = [];
     let stanza_no = 0;
@@ -77,19 +96,54 @@ async function load_stanza() {
             stanzas = parse_poem(data);
     });
 
+    let speaker_cycle = get(settings).speaker_cycle;  // the user speaks every n chunks
+    let cycle_idx = Math.floor(Math.random() * speaker_cycle); // init cycle_idx to a random number between 0 and speaker_cycle - 1
+
+    // set the speaker and initials for each word
     for (let stanza of stanzas) {
-        const transition_prob = 0.3;
-        let current_speaker = 0; // Start with the narrator
-        for (let i = 0; i < stanza.length; i++) {
-            stanza[i].speaker = current_speaker;
-            // TEST: 
-            stanza[i].speaker = 0;
-            if (Math.random() < transition_prob) { // TODO: we need to achieve settings.words_required
-                current_speaker = 1 - current_speaker;
+        // measure the length (in words) of each verse
+        let verse_lengths = [0];
+        let current_verse = 0;
+        for (let word of stanza) {
+            if (word.verse !== current_verse) {
+                current_verse += 1;
+                verse_lengths.push(0);
             }
+            verse_lengths[current_verse] += 1;
+        }
+        console.log("verse_lengths:", verse_lengths);
+        // measure the length (in words) of each chunk
+        // a verse is split into two chunks if it is more than 5 words long
+        let chunk_lengths = [];
+        for (let verse_len of verse_lengths) {
+            if (verse_len <= 5) {
+                chunk_lengths.push(verse_len);
+            } else {
+                let first_chunk_len = Math.ceil(verse_len / 2);
+                chunk_lengths.push(first_chunk_len);
+                chunk_lengths.push(verse_len - first_chunk_len);
+            }
+        }
+        console.log("chunk_lengths:", chunk_lengths);
+        // assert that the sum of the chunk lengths is equal to the length of the stanza
+        let sum_chunk_lengths = chunk_lengths.reduce((a, b) => a + b, 0);
+        if (sum_chunk_lengths !== stanza.length) {
+            console.log("sum_chunk_lengths:", sum_chunk_lengths);
+            console.log("stanza.length:", stanza.length);
+        }
+        for (let word of stanza) {
+            // set the speaker
+            word.speaker = cycle_idx % speaker_cycle === 0 ? 1 : 0;  // speaker=0 for narrator, speaker=1 for user
             // set initials
-            if (Math.random() < get(settings).percent_question_mark && stanza[i].speaker === 1) {
-                stanza[i].initial = "?";
+            if (Math.random() < get(settings).percent_question_mark && word.speaker === 1) {
+                word.initial = "?";
+            }
+            // decrement the number of words remaining in our current chunk
+            chunk_lengths[0] -= 1;
+            // if we have finished our current chunk, move to the next speaker and pop the chunk
+            if (chunk_lengths[0] === 0) {
+                cycle_idx += 1;
+                chunk_lengths.shift();
             }
         }
     }
@@ -127,4 +181,4 @@ function loadModel() {
 }
 
 
-export { load_keyframes, load_stanza, load_mp3, loadModel };
+export { load_keyframes, load_stanza, load_mp3, loadModel, load_logo };

@@ -12,8 +12,8 @@
 </div>
 
 <div class="card_grid">
-    {#each poems_metadata as poem}
-        <Card poem={poem} />
+    {#each poems_metadata as poem, idx}
+        <Card poem={{idx: idx, ...poem}} />
     {/each}
 </div>
 

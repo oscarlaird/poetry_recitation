@@ -5,7 +5,7 @@
     import { onMount } from 'svelte';
     import { fade } from 'svelte/transition';
     import { tweened } from 'svelte/motion';
-    import { sineInOut } from 'svelte/easing';
+    import { linear, quadIn, sineInOut } from 'svelte/easing';
     // $: pos = interpolate_all($video_prog.value, $keyframes, $slopes);
     // guard against null values
     $: pos = $keyframes && $slopes ? interpolate_all($video_prog_value, $keyframes, $slopes) : {x: 0, y: 0, z: 0};
@@ -52,14 +52,15 @@
 
 {#await keyframe_promise}
 {:then data}
+    {#key $image_filename}
     <div class="image_box" 
         style={`background-image: url("${$image_filename}")`}
         style:left={-(x_frames_clamped-0.5) * 100 + "%"}
         style:top={- (y_frames_clamped-0.5) * 100 + "%"}
         style:height={max_x_frames * 100 + "%"}
-        in:fade|global={{duration: 600, delay: $stanza > 1 ? 2000 : 0}}
-        out:fade|global={{duration: 600, delay: 0}}
+        in:fade|global={{duration: 600, easing: quadIn}}
     />
+    {/key}
     {#if $victory===-1}
     <div class="image_box" 
         style={`background-image: url("${$image_trash_filename}")`}
@@ -75,8 +76,7 @@
     .image_box {
         position: absolute;
         aspect-ratio: 1 / 1;
-        background-image: url("test.png");
         background-size: cover;
-        background-color: black;
+        z-index: 1;
     }
 </style>

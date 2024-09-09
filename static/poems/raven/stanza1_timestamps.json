@@ -207,7 +207,8 @@
         "conf": 1.0,
         "end": 19.23,
         "start": 18.84,
-        "word": "one"
+        "word": "one",
+        "alternatives": ["gently", "rapping"]
     },
     {
         "conf": 1.0,

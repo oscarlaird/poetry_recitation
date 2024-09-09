@@ -1,10 +1,10 @@
 <script>
     import { goto } from '$app/navigation';
-    import { poem_store } from '../stores.js';
+    import { poem_idx } from '../stores.js';
     export let poem;
     function select_poem() {
         console.log(poem);
-        poem_store.set(poem);
+        poem_idx.set(poem.idx);
         goto(`../settings`);
 
     }
