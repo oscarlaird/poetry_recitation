@@ -94,7 +94,8 @@
         "conf": 1.0,
         "end": 6.03,
         "start": 5.82,
-        "word": "the"
+        "word": "the",
+        "alternatives": ["only"]
     },
     {
         "conf": 1.0,
@@ -118,7 +119,8 @@
         "conf": 1.0,
         "start": 7.46,
         "end": 7.6,
-        "word": "the"
+        "word": "the",
+        "alternatives": ["sweep"]
     },
     {
         "conf": 1.0,
@@ -130,7 +132,8 @@
         "conf": 1.0,
         "end": 8.88,
         "start": 8.67,
-        "word": "of"
+        "word": "of",
+        "alternatives": ["easy"]
     },
     {
         "conf": 1.0,
@@ -148,7 +151,8 @@
         "conf": 1.0,
         "end": 10.02,
         "start": 9.75,
-        "word": "and"
+        "word": "and",
+        "alternatives": ["downy"]
     },
     {
         "conf": 1.0,

@@ -15,7 +15,8 @@
         "conf": 1.0,
         "end": 2.52,
         "start": 2.4,
-        "word": "a"
+        "word": "a",
+        "alternatives": ["midnight"]
     },
     {
         "conf": 1.0,
@@ -39,7 +40,8 @@
         "conf": 1.0,
         "end": 4.17,
         "start": 4.05,
-        "word": "i"
+        "word": "i",
+        "alternatives": ["pondered"]
     },
     {
         "conf": 1.0,
@@ -81,7 +83,8 @@
         "conf": 1.0,
         "end": 8.04,
         "start": 7.89,
-        "word": "a"
+        "word": "a",
+        "alternatives": ["quaint"]
     },
     {
         "conf": 1.0,
@@ -135,7 +138,8 @@
         "conf": 1.0,
         "end": 13.14,
         "start": 13.02,
-        "word": "i"
+        "word": "i",
+        "alternatives": ["nodded"]
     },
     {
         "conf": 1.0,
@@ -177,7 +181,8 @@
         "word": "a",
         "start": 16.5,
         "end": 16.59,
-        "conf": 1.0
+        "conf": 1.0,
+        "alternatives": ["tapping"]
     },
     {
         "conf": 1.0,
@@ -195,20 +200,22 @@
         "conf": 1.0,
         "end": 18.39,
         "start": 18.15,
-        "word": "of"
+        "word": "of",
+        "alternatives": ["some", "gently"]
     },
     {
         "conf": 1.0,
         "end": 18.84,
         "start": 18.42,
-        "word": "some"
+        "word": "some",
+        "alternatives": ["gently"]
     },
     {
         "conf": 1.0,
         "end": 19.23,
         "start": 18.84,
         "word": "one",
-        "alternatives": ["gently", "rapping"]
+        "alternatives": ["gently"]
     },
     {
         "conf": 1.0,
@@ -232,7 +239,8 @@
         "conf": 1.0,
         "end": 21.9,
         "start": 21.48,
-        "word": "at"
+        "word": "at",
+        "alternatives": ["my", "a"]
     },
     {
         "conf": 1.0,
@@ -274,7 +282,8 @@
         "conf": 1.0,
         "end": 25.11,
         "start": 24.96,
-        "word": "i"
+        "word": "i",
+        "alternatives": ["muttered"]
     },
     {
         "conf": 1.0,

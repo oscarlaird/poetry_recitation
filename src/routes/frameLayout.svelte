@@ -31,6 +31,7 @@
         max-width: 1024px;
         max-height: 90vh;
         aspect-ratio: 1/1;
+        overflow: hidden;
     }
     .goldframe {
         position: absolute;
@@ -63,28 +64,30 @@
         height: 100%;
         background-color: white;
         box-shadow: 0 0 15px 15px white;
+        /* backdrop-filter: contrast(0.4) saturate(0.0) brightness(1.5); */
         position: relative;
         /* font */
         text-align: center;
         font-size: 2em;
+        border-radius: 5px;
     }
     @media (max-width: 768px) {
         /* don't show the gold frame on mobile */
         .mainbox {
             aspect-ratio: auto;
             height: 100vh;
+            min-height: 100vh;
+            width: 100vw;
         }
         .goldframe {
             display: none;
             position: relative;
         }
         .inner_image_container {
+            /* height: 100vw; */
             width: 100vw;
-            height: 100vw;
+            min-height: calc(100vh - 120px);
             margin: 0;
-        }
-        .bar {
-            height: 12vw;
         }
         .topbar, .bottombar {
             padding: 0;

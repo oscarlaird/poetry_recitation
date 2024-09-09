@@ -4,9 +4,9 @@
     import { tick } from 'svelte';
     import { tweened } from 'svelte/motion';
     import { cubicOut, linear, quadIn, quadOut, sineInOut, } from 'svelte/easing';
-    import { lose_word, partial_vosk_result, stanza, verse, leading_idx, audio_filename, all_words, timestamps, parsed_stanzas, n_words, next_word, video_prog_value, lives, victory, settings } from '../stores.js';
-    import { make_spring, tick_spring } from "./spring_velocity_control";
-    import { load_stanza, load_mp3, loadModel } from './loaders';
+    import { lose_word, partial_vosk_result, stanza, verse, leading_idx, audio_filename, audio_filename_from_stanza, all_words, timestamps, parsed_stanzas, n_words, next_word, video_prog_value, lives, victory, settings, keyframes, slopes } from '../stores.js';
+    import { make_spring, reset_spring, tick_spring } from "./spring_velocity_control";
+    import { fetch_timestamps_for_stanza, load_stanzas, load_timestamps, load_keyframes, loadModel, fetch_keyframes_for_stanza } from './loaders';
     import { crossfade, fade, } from "svelte/transition";
     import { flip } from 'svelte/animate';
     const [send, receive] = crossfade({
@@ -31,17 +31,19 @@
     let audio_duration = 30.0;
     $: user_velocity = $leading_idx / (elapsed_seconds + 0.1);
     $: recording_velocity = $n_words * 1.0 / audio_duration;
-    $: user_velocity_weight = 1.0;
+    $: user_velocity_weight = Math.min(1.0, elapsed_seconds / 6.0);
     $: target_velocity = user_velocity_weight * user_velocity + (1 - user_velocity_weight) * recording_velocity;
-    $: video_prog.set($leading_idx * 1.0, target_velocity);
-    let video_prog = make_spring(0, 0.3, 0.1, 0, 0); // must be manually animated with tick_spring
+    $: target_video_prog = $leading_idx * 1.0;
+    let video_prog = make_spring(0.3, 0.1, 0, 0); // must be manually animated with tick_spring
     // send value to the store
-    $: video_prog_value.set($video_prog.value);
+    $: video_prog_value.set($video_prog?.value || 0);
     //
     //
     function animate_spring() {
-        tick_spring(video_prog);
-        video_prog.set($leading_idx * 1.0, target_velocity);
+        if (video_prog !== null) {
+            tick_spring(video_prog);
+            video_prog.set(target_video_prog, target_velocity);
+        }
         requestAnimationFrame(animate_spring);
     }
     async function revealNextWord() {
@@ -63,21 +65,14 @@
                 victory.set(1);
                 return;
             }
-            // allow for the verse to transition before updating the stanza
-            await tick();
-            // block for 200ms between stanzas
-            await new Promise(resolve => setTimeout(resolve, 200));
-            stanza.update(s => s + 1);
-            verse.update(v => 0);
-            // restart the idx indicator
-            leading_idx.set(0);
+            load_stanza($stanza + 1); // fetches data before moving to the next stanza
             return;  // we are done with the current stanza; don't do anything else
         }
         // move to the next line if the verse has changed or if we have reach the end of the stanza
         if ($next_word.verse !== $verse) {
             // allow for the revealed word to transition before moving to the next line
             await tick();
-            // sleep 200ms
+            // sleep 200ms before advancing to the next verse
             await new Promise(resolve => setTimeout(resolve, 200));
             verse.update(v => v + 1);
         }
@@ -167,51 +162,46 @@
         // play the clip and wait for it to finish
         await play_clip(start_word_idx, stop_word_idx);
     }
-    async function load_data() {
-        await Promise.all([
-            load_stanza(),
-            load_mp3(),
-            loadModel()
-        ]);
-        // assert that $all_words and $timestamps are the same length
-        console.assert($n_words === $timestamps.length, 'The number of words and timestamps do not match', `n_words: ${$n_words}, timestamps: ${$timestamps.length}`);
-        // check that they agree in every word
-        for (let i = 0; i < $n_words; i++) {
-            if ($all_words[i].word !== $timestamps[i].word) {
-                console.error('word mismatch at index', i, $all_words[i], $timestamps[i]);
-            }
-            break;
-        }
-        console.log('loaded stanza words', $all_words);
-    }
     let load_promise = new Promise((resolve) => {});
-    onMount(async () => {
-        // load the lyrics, timestamps, and vosk model
-        load_promise = load_data();
+
+    async function load_stanza(next_stanza) {
+        // load audio and timestamps and start the narrator's turn
+        console.log('loading stanza', $stanza);
+        let load_stanza_start_time = new Date().getTime();
+        let next_stanza_audio_filename = audio_filename_from_stanza(next_stanza);
         // narrator audio ctx
-        narrator_audioContext = new AudioContext();
-        narrator_audioBuffer = await fetch($audio_filename)
+        narrator_audioBuffer = await fetch(next_stanza_audio_filename)
             .then(response => response.arrayBuffer())
             .then(buffer => narrator_audioContext.decodeAudioData(buffer));
-        // narrator's turn once the data is loaded (so we can see the words) and the mic is ready (so we can mute it)
-        await Promise.all([load_promise]).then(
-            () => {
-                // if $stanza>1, then sleep two seconds
-                if ($next_word.speaker === 0) {
-                    if ($stanza > 1) {
-                        setTimeout(() => {
-                            narrator_turn();
-                        }, 2000);
-                    } else {
-                        narrator_turn();
-                    }
-                }
-                console.log('data and mic loaded');
-            }
-        )
+        audio_duration = narrator_audioBuffer.duration;
+        // TODO, perform these in parallel
+        let new_timestamps = await fetch_timestamps_for_stanza(next_stanza);
+        let new_keyframes_and_new_slopes = await fetch_keyframes_for_stanza(next_stanza);
+        $stanza = next_stanza;
+        $leading_idx = 0;
+        $verse = 0;
+        timestamps.set(new_timestamps);
+        keyframes.set(new_keyframes_and_new_slopes.keyframes);
+        slopes.set(new_keyframes_and_new_slopes.slopes);
+        await tick(); // wait for target_video_prog to be updated (should be 0, target velocity should be ~2-4 words per second)
+        reset_spring(video_prog, target_video_prog, target_velocity);
+        let load_stanza_end_time = new Date().getTime();
+        console.log('loaded stanza', $stanza, 'in', load_stanza_end_time - load_stanza_start_time, 'ms');
+        // sleep to make sure we wait at least 1000ms between stanzas
+        if (load_stanza_end_time - load_stanza_start_time < 1000) {
+            await new Promise(resolve => setTimeout(resolve, 1000 - (load_stanza_end_time - load_stanza_start_time)));
+        }
+        if ($next_word.speaker === 0) {
+            narrator_turn();
+        }
+    }
+    onMount(async () => {
+        await load_stanzas();
+        narrator_audioContext = new AudioContext();
+        load_promise = load_stanza(1);
         // manually run the updates for velocity controlled spring
         animate_spring();
-        // refresh the time to trigger reactive updates
+        // refresh the time to trigger reactive updates of time (used for the timer)
         const interval = setInterval(() => {
             time = new Date();
         }, 50);
@@ -220,9 +210,8 @@
 </script>
 
 {#await load_promise}
-{:then data}
+{:then _}
     <div class="bar"
-        in:fade={{delay: $stanza>1 ? 2000 : 0, duration: 400}}
     >
         {#if $remaining_time < show_timer_threshold}
             <progress class="timer" value={$remaining_time} max={show_timer_threshold}></progress>
@@ -231,14 +220,13 @@
             <progress class="word_count" value={$leading_idx} max={$n_words}></progress>
         -->
 
-        <!-- {#key $verse} -->
-        <div class="right_box box" in:fade={{delay: 400, duration: 600, x: 0, y: -60, easing: linear}}
+        <div class="right_box box" 
         >
             {#each $all_words.slice($leading_idx, $n_words).filter(w => !w.revealed && w.verse === $verse) as word (word.id)}
                 <div class="letterbox" class:we_speak={word.speaker===1} class:they_speak={word.speaker===0}
                     animate:flip={{duration: 350}}
                     out:send={{key: word.id}}
-                    in:fade={{duration: 300, easing: quadIn}}
+                    in:fade={{duration: 300, easing: quadOut}}
                     aria-label="Reveal"
                     role="button"
                     tabindex="0"
@@ -253,22 +241,18 @@
                 A
             </div>
         </div>
-        <div class="left_box box" out:fade={{delay: 200, duration: 200, x: 0, y: +60, easing: linear}}
-                                  in:fade={{delay: 500, duration: 0, x: 0, y: -60, easing: linear}}
+        <div class="left_box box"
          >    
             {#each $all_words.slice(0, $leading_idx).filter(w => w.verse === $verse) as word (word.id)}
                 <div class="wordbox"
                     in:receive={{key: word.id}}
-                    out:fade={{duration: 300, easing: sineInOut}}
+                    out:fade={{duration: 300, easing: quadIn}}
                 >
                     {@html word.written.replace(/ /g, '&nbsp;')}
                 </div>
             {/each}
         </div>
-        <!-- {/key} -->
     </div>
-    <!--
--->
 {/await}
 
 <style>
@@ -277,9 +261,6 @@
         src: url('/fonts/kingthings-calligraphica.2.ttf') format('truetype');
         font-weight: normal;
         font-style: normal;
-    }
-    .wrapper {
-        height: 100%;
     }
     .bar {
         font-size: 2rem;
@@ -296,21 +277,26 @@
         align-items: center;
         /* centered text */
         text-justify: center;
+        z-index: 3;  /* above the image */
     }
     .box {
         display: flex;
     }
     .left_box {
+        position: absolute;
         width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
         justify-content: left;
-        align-content: flex-start;
+        align-content: flex-end;
         flex-wrap: wrap;
+        padding: 0 4px;
+        box-sizing: border-box;
+        transform: translateY(-100%);
+        backdrop-filter: brightness(3.0) blur(1.5px) contrast(0.6);
     }
     .right_box {
        /* position: absolute; */
+       height: 100%;
+       position: relative;
        width: 100%;
        justify-content: left; 
        align-content: center;
@@ -319,6 +305,8 @@
     }
     .letterbox {
         border: 1px solid black;
+        box-sizing: border-box;
+        height: 48px;
         font-size: 1.3em;
         min-width: 1.3em;
         aspect-ratio: 1/1;
@@ -338,6 +326,7 @@
     }
     .wordbox {
         flex: 0 0 auto; /* don't shrink, even if we go past the end of the line */
+        margin: 4px 0;
     }
     progress {
         display: block;
@@ -352,19 +341,10 @@
     }
     .timer {
         top: 0;
-        transform: translateY(-5px);
-    }
-    .word_count {
-        bottom: 0;
-        transform: translateY(+5px);
     }
     .timer::-webkit-progress-value,
     .timer::-moz-progress-bar {
         background-color: rgb(148, 57, 57);
-    }
-    .word_count::-webkit-progress-value,
-    .word_count::-moz-progress-bar {
-        background-color: rgb(63, 119, 58);
     }
     /* set the color of the progress bar for the timer */
     @media (min-width: 768px) {
@@ -374,9 +354,14 @@
         }
         /* Put the words and letters on the same line */
         .left_box {
+            height: 100%;
             position: absolute;
             left: 0;
+            top: 0;
             justify-content: left;
+            align-content: center;
+            transform: none;
+            backdrop-filter: none;
         }
         .right_box {
             height: 100%;
@@ -384,11 +369,16 @@
             right: 0;
             top: 0;
             justify-content: right;
+            align-content: center;
             /* border: 5px solid red; */
         }
         .right_box .letterbox:last-child {
             /* hide the placeholder letterbox since we are putting everything on the same line */
             display: none;
+        }
+        .letterbox {
+            height: 100%;
+            margin: 0 5px 0 0;
         }
     }
     @media (min-width: 1024px) {

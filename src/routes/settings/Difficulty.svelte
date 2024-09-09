@@ -22,13 +22,14 @@
 
     let title_element;
     // TODO: get the strokes from the poem_store (or perhaps metadata)
+    let logo_promise;
     onMount(() => {
         // reset the game when we go to settings
         victory.set(0);
         leading_idx.set(0);
-        stanza.set(1);
+        stanza.set(1);  // 1-indexed 
         verse.set(0);
-        load_logo();
+        logo_promise = load_logo();
     });
 
 </script>
@@ -41,11 +42,14 @@
     <div class="poem_info_box">
         <div class="title_box" bind:this={title_element}>{$poem_store.title}</div>
         <svg class="icon" viewBox={$poem_store.logo_viewbox} >
-            {#each $logo as d}
-            <path d={d} fill=none stroke=black stroke-width=3
-                in:draw|global={{duration: 3000, easing: expoOut }}
-                />
-            {/each} 
+            {#await logo_promise}
+            {:then}
+                {#each $logo as d}
+                <path d={d} fill=none stroke=black stroke-width=3
+                    in:draw|global={{delay: 500, duration: 3000, easing: expoOut }}
+                    />
+                {/each} 
+            {/await}
         </svg>
     </div>
 
@@ -101,14 +105,14 @@
         </div>
     </div>
 
-{#key $level}
-<div class="letter_grid"
->
+    {#key $level}
+    <div class="letter_grid"
+    >
     {#each letters as letter}
         <div class="letter"
                 class:we_speak={Math.random() < $settings.words_required} 
             >{Math.random() < $settings.percent_question_mark ? '?' : letter}</div>
-        {/each}
+    {/each}
     </div>
     {/key}
 </div>

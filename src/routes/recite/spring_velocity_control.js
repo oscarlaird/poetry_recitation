@@ -4,9 +4,9 @@
 
 import { writable } from "svelte/store";
 
-export function make_spring(init_value, damping, stiffness, target_velocity, target_value) {
+export function make_spring(damping, stiffness, target_velocity, target_value) {
     // user is responsible for animating with tick_spring
-    const store = writable({value: init_value, velocity: 0});
+    const store = writable({value: target_value, velocity: target_velocity});
 
     return {
         set: function(set_target_value, set_target_velocity) {
@@ -16,9 +16,9 @@ export function make_spring(init_value, damping, stiffness, target_velocity, tar
         subscribe: store.subscribe,
         store: store,
         // x, v, x_target, v_target
-        value: init_value,
+        value: target_value,
         target_value: target_value,
-        velocity: 0,
+        velocity: target_velocity,
         target_velocity: target_velocity,
         // coeffs
         damping: damping,
@@ -26,6 +26,15 @@ export function make_spring(init_value, damping, stiffness, target_velocity, tar
         //
         last_time: Date.now(),
     };
+}
+
+export function reset_spring(spring, target_value, target_velocity) {
+    spring.value = target_value;
+    spring.velocity = target_velocity;
+    spring.target_value = target_value;
+    spring.target_velocity = target_velocity;
+    spring.last_time = Date.now();
+    spring.store.set({value: spring.value, velocity: spring.velocity});
 }
 
 export function tick_spring(spring) {

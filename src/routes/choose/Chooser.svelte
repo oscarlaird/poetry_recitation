@@ -5,12 +5,6 @@
 
 </script>
 
-<div class="sort_buttons_box">
-    {#each sort_options as option, i}
-        <button class="sort_button">{option}</button>
-    {/each}
-</div>
-
 <div class="card_grid">
     {#each poems_metadata as poem, idx}
         <Card poem={{idx: idx, ...poem}} />

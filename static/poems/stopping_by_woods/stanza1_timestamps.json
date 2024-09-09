@@ -29,7 +29,8 @@
         "conf": 1.0,
         "end": 2.37,
         "start": 2.19,
-        "word": "i"
+        "word": "i",
+        "alternatives": ["think"]
     },
     {
         "conf": 1.0,
@@ -41,7 +42,8 @@
         "conf": 1.0,
         "end": 3.0,
         "start": 2.82,
-        "word": "i"
+        "word": "i",
+        "alternatives": ["know"]
     },
     {
         "conf": 1.0,
@@ -91,7 +93,8 @@
         "conf": 1.0,
         "end": 5.97,
         "start": 5.43,
-        "word": "though"
+        "word": "though",
+        "alternatives": ["to"]
     },
     {
         "conf": 1.0,

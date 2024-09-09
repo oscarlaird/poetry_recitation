@@ -1,11 +1,11 @@
 <script>
-    import { stanza, image_filename, image_trash_filename, keyframes, slopes, video_prog_value, victory } from '../stores.js';
+    import { stanza, image_filename, image_trash_filename, image_filename_from_stanza, keyframes, slopes, video_prog_value, victory, parsed_stanzas } from '../stores.js';
     import { interpolate_all } from './keyframes.js';
     import { load_keyframes } from './loaders.js';
     import { onMount } from 'svelte';
     import { fade } from 'svelte/transition';
     import { tweened } from 'svelte/motion';
-    import { linear, quadIn, sineInOut } from 'svelte/easing';
+    import { linear, quadIn, quadOut, sineInOut, sineOut } from 'svelte/easing';
     // $: pos = interpolate_all($video_prog.value, $keyframes, $slopes);
     // guard against null values
     $: pos = $keyframes && $slopes ? interpolate_all($video_prog_value, $keyframes, $slopes) : {x: 0, y: 0, z: 0};
@@ -23,6 +23,7 @@
     $: y = (y_override && $y_override) || pos.y;
 
 
+    // could this be done more easily w/ transform:scale and transform-origin?
     $: frame_width = z;
     $: x_frames = x / frame_width;
     $: y_frames = y / frame_width;
@@ -34,10 +35,11 @@
     $: x_frames_clamped = clamp(x_frames, 0.5, max_x_frames - 0.5);
     $: y_frames_clamped = clamp(y_frames, 0.5, max_x_frames - 0.5);
 
-    let keyframe_promise = new Promise(() => {});
-    onMount(async () => {
-        keyframe_promise = load_keyframes();
-    });
+    // let keyframe_promise = new Promise(() => {});
+    // onMount(async () => {
+    //     keyframe_promise = load_keyframes();
+    // });
+    $: console.log($parsed_stanzas.length, $stanza);
 
     $: if ($victory === -1 && !zoom_override) { // why do I need the guard?
         console.log("setting zoom override", $victory);
@@ -50,17 +52,31 @@
     }
 </script>
 
-{#await keyframe_promise}
-{:then data}
-    {#key $image_filename}
-    <div class="image_box" 
-        style={`background-image: url("${$image_filename}")`}
+        <!-- style={`background-image: url("${$image_filename}")`}
+        style:height={max_x_frames * 100 + "%"}
         style:left={-(x_frames_clamped-0.5) * 100 + "%"}
         style:top={- (y_frames_clamped-0.5) * 100 + "%"}
-        style:height={max_x_frames * 100 + "%"}
-        in:fade|global={{duration: 600, easing: quadIn}}
+        style:z-index={2}
+        in:fade={{duration: 1600, easing: quadOut}}
+        -->
+
+    <!-- #each and #if blocks are currently unnecessary -->
+    {#each Array.from({length: $parsed_stanzas.length}) as _, i (i)}
+    {#if i+1===$stanza || i+2===$stanza}
+    <div class="image_box" 
+        style="
+            background-image: url({image_filename_from_stanza(i+1)});
+            left:    {i+1===$stanza ? -(x_frames_clamped-0.5) * 100 : 0}%;
+            top:     {i+1===$stanza ? -(y_frames_clamped-0.5) * 100 : 0}%;
+            height:  {i+1===$stanza ? max_x_frames * 100 : 100}%;
+            z-index: {i};
+        "
+        in:fade|global={{duration: 4500, easing: sineOut}}
     />
-    {/key}
+    {/if}
+    {/each}
+
+
     {#if $victory===-1}
     <div class="image_box" 
         style={`background-image: url("${$image_trash_filename}")`}
@@ -70,13 +86,13 @@
         in:fade={{duration: 4000, easing: sineInOut}}
     />
     {/if}
-{/await}
 
 <style>
     .image_box {
         position: absolute;
         aspect-ratio: 1 / 1;
         background-size: cover;
+        background-color: transparent;
         z-index: 1;
     }
 </style>

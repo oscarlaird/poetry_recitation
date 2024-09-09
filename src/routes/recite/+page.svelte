@@ -86,9 +86,7 @@
             <GameOverBottomBar 
             />
         {:else}
-            {#key $stanza}
-                <BottomBar />
-            {/key}
+            <BottomBar />
         {/if}
 
     </div>

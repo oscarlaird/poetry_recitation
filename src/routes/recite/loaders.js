@@ -1,7 +1,6 @@
 import { get_all_slopes } from './keyframes.js';
-import { parsed_stanzas, timestamps, timestamps_filename, words_filename, audio_filename, logo, keyframes_filename, fulltext_filename, logo_filename, keyframes, slopes, settings, all_words } from '../stores.js';
+import { parsed_stanzas, timestamps, timestamps_filename, words_filename, audio_filename, logo, keyframes_filename, fulltext_filename, logo_filename, keyframes, slopes, settings, all_words, timestamps_filename_from_stanza, keyframes_filename_from_stanza } from '../stores.js';
 import { get } from 'svelte/store';
-import MP3Tag2 from 'mp3tag.js';
 import * as Vosk from 'vosk-browser';
 
 
@@ -16,13 +15,27 @@ async function load_logo() {
 
 async function load_keyframes() {
     // load keyframes from the json file
-    fetch(get(keyframes_filename))
+    await fetch(get(keyframes_filename))
         .then(response => response.json())
         .then(data => {
+            console.log("loaded keyframes:", data);
             keyframes.set(data);
             slopes.set(get_all_slopes(data));   
     });
 }
+async function fetch_keyframes_for_stanza(stanza) {
+    let keyframes_filename = keyframes_filename_from_stanza(stanza);
+    let keyframes = null;
+    let slopes = null;
+    await fetch(keyframes_filename)
+        .then(response => response.json())
+        .then(data => {
+            keyframes = data;
+            slopes = get_all_slopes(data);
+    });
+    return {keyframes: keyframes, slopes: slopes};
+}
+    
 // parsing the words from the poem
 function split_stanzas(poem) {
     // split on arbitrary number of newline separators
@@ -85,7 +98,7 @@ function parse_poem(poem) {
     }
     return stanzas;
 }
-async function load_stanza() {
+async function load_stanzas() {
     // load the mp3, png, and json for the stanza
     // load stanza[number]_words.json into the all_words store
     // from /poems/$poem/stanza[number]_words.json
@@ -151,7 +164,7 @@ async function load_stanza() {
     parsed_stanzas.set(stanzas);
     console.log("loaded parsed_stanzas:", get(parsed_stanzas));
 }
-async function load_mp3() {
+async function load_timestamps() {
     // get the buffer for this file
     // const response = await fetch(get(audio_filename));
     // const buffer = await response.arrayBuffer();
@@ -166,8 +179,35 @@ async function load_mp3() {
     await fetch(get(timestamps_filename))
         .then(response => response.json())
         .then(data => {
+            console.assert(data.length === get(all_words).length, "timestamps and all_words should have the same length but have lengths", data.length, get(all_words).length);
+            // check that they agree in every word
+            for (let i = 0; i < data.length; i++) {
+                if (get(all_words)[i].word !== data[i].word) {
+                    console.error('word mismatch at index', i, get(all_words)[i], data[i]);
+                }
+                break;
+            }
             timestamps.set(data);
     });
+}
+async function fetch_timestamps_for_stanza(stanza) {
+    let timestamps_filename = timestamps_filename_from_stanza(stanza);
+    let stanza_words = get(parsed_stanzas)[stanza-1];
+    let timestamps = null;
+    await fetch(timestamps_filename)
+        .then(response => response.json())
+        .then(data => {
+            console.assert(data.length === stanza_words.length, "timestamps and all_words should have the same length but have lengths", data.length, stanza_words.length);
+            // check that they agree in every word
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].word !== stanza_words[i].word) {
+                    console.error('word mismatch at index', i, stanza_words[i], data[i]);
+                }
+                break;
+            }
+            timestamps = data;
+    });
+    return timestamps;
 }
 
 let modelPromise = null;
@@ -181,4 +221,4 @@ function loadModel() {
 }
 
 
-export { load_keyframes, load_stanza, load_mp3, loadModel, load_logo };
+export { load_keyframes, load_stanzas, load_timestamps, loadModel, load_logo, fetch_timestamps_for_stanza, fetch_keyframes_for_stanza };
