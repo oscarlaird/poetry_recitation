@@ -18,7 +18,7 @@ const video_prog_value = writable(0.0);
 const lose_word = writable("lose");
 
 //
-const level = writable(5);
+const level = writable(1);
 const victory = writable(0); // -1 = lose, 0 = ongoing, 1 = win
 // const settings = writable({lives: 1, words_required: 0.4, percent_question_mark: 0.15});
 const settings = derived(level, $level => test_difficulty_settings[$level - 1]);
