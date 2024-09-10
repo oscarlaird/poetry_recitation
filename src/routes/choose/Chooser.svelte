@@ -22,6 +22,7 @@
         gap: 0;
     }
     .sort_button {
+        color: black;
         font-family: 'Times New Roman', Times, serif;
         font-size: 2em;
         border: 1px solid black;

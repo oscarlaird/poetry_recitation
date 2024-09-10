@@ -167,6 +167,7 @@
         padding-left: 10px;
     }
     .star {
+        height: 75%;
         max-height: 75%;
         cursor: pointer;
     }
@@ -176,6 +177,9 @@
     .star path:hover {
         stroke: red;
         stroke-width: 10;
+    }
+    .star path {
+        stroke-linecap: round;
     }
     .settings_stats {
         height: 16%;
@@ -188,6 +192,7 @@
         font-size: 1rem;
     }
     .openboxes, .questionboxes, .heartboxes {
+        flex: 0;
         font-weight: bold;
         position: relative;
         display: flex;
@@ -198,6 +203,9 @@
     .openboxes div, .questionboxes div {
         height: 1em;
     }
+    center {
+        white-space: nowrap;
+    }
     .progress {
         width: 100%;
         margin: 0.3em 0;
@@ -207,8 +215,6 @@
         box-sizing: border-box;
     }
     .heartsymbols {
-        border: none;
-        width: 100%;
         display: flex;
         flex-direction: row;
         justify-content: space-around;

@@ -44,14 +44,17 @@
     button {
         font-family: 'Times New Roman', Times, serif;
         background-color: white;
+        color: black;
         cursor: pointer;
         flex: 1;
         display: flex;
         justify-content: center;
         border: 2px solid black;
     }
-    button:hover {
-        transform: scale(1.15);
+    @media (hover: hover) {
+        button:hover {
+            transform: scale(1.15);
+        }
     }
     .text {
         font-size: 1.4rem;

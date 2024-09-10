@@ -16,6 +16,9 @@
 </button>
 
 <style>
+    button {
+        color: black;
+    }
     .card {
         height: 100%;
         background-color: white;

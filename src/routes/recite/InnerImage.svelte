@@ -69,7 +69,6 @@
             left:    {i+1===$stanza ? -(x_frames_clamped-0.5) * 100 : 0}%;
             top:     {i+1===$stanza ? -(y_frames_clamped-0.5) * 100 : 0}%;
             height:  {i+1===$stanza ? max_x_frames * 100 : 100}%;
-            z-index: {i};
         "
         in:fade|global={{duration: 4500, easing: sineOut}}
     />

@@ -86,7 +86,7 @@
         .inner_image_container {
             /* height: 100vw; */
             width: 100vw;
-            min-height: calc(100vh - 120px);
+            min-height: calc(100dvh - 120px);
             margin: 0;
         }
         .topbar, .bottombar {

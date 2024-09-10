@@ -5,6 +5,7 @@
     import InnerImage from "./InnerImage.svelte";
     import VictoryBox from "./VictoryBox.svelte";
     import DefeatBox from "./DefeatBox.svelte";
+    import LivesOverlay from "./LivesOverlay.svelte";
     import { stanza, level, victory, music_filename } from "../stores.js";
     import { tweened } from "svelte/motion";
     import { onMount } from 'svelte';
@@ -79,6 +80,7 @@
             <DefeatBox />
         {/if}
         <InnerImage />
+        <LivesOverlay />
     </div>
 
     <div slot="bottombar" class="bottombar">
