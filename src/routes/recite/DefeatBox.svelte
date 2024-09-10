@@ -1,8 +1,9 @@
 <script>
-    import { lose_word } from "../stores";
+    import { stanza } from "../stores";
+    import { lose_word, parsed_stanzas } from "../stores";
     import { backOut, cubicOut, elasticOut, expoOut, linear, quadInOut, quadOut, sineInOut} from "svelte/easing";
     import {lose_words} from "$lib/lose_words.js";
-    // let lose_word = lose_words[Math.floor(Math.random() * lose_words.length)];
+    let bad_word = lose_words[Math.floor(Math.random() * lose_words.length)];
 
     function spin(node, { delay = 0, duration = 4000, initial_angle = 180, final_angle = 720, easing = elasticOut }) {
         const style = getComputedStyle(node);
@@ -24,7 +25,12 @@
 <div class="level_completed_box"
     in:spin={{duration: 1000, easing: backOut}}
 >
-    &iexcl{$lose_word.word}!
+    {bad_word.word}!
+<pre>losing: {$lose_word.word}
+stanza: {$lose_word.stanza}
+ verse: {$lose_word.verse}
+ words: {$lose_word.id}</pre>
+
     <div class="background"></div>
 </div>
 
@@ -41,6 +47,7 @@
         font-weight: bold;
         border: 4px solid red;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         font-size: 2.5rem;
@@ -55,5 +62,13 @@
         background: white;
         z-index: -2;
         opacity: 0.8;
+    }
+    pre {
+        font-size: 1.5rem;
+        font-weight: normal;
+        color: black;
+        text-shadow: 2px 2px 0 white, -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white;
+        margin: 0;
+        margin-top: 20px;
     }
 </style>

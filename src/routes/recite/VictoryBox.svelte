@@ -51,7 +51,7 @@
         width: 50%;
         right: 0;
         bottom: 10px;
-        z-index: 2;
+        z-index: 10;
         color: gold;
         transform: translate(-50%, 0);
     }

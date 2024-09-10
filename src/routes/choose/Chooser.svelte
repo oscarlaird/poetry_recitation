@@ -1,7 +1,6 @@
 <script>
     import { poems_metadata } from "$lib/poems_metadata.js";
     import Card from "./Card.svelte";
-    let sort_options = ["Author", "Genre", "Best", "Classic"]
 
 </script>
 
@@ -41,10 +40,13 @@
     }
     .card_grid {
         display: grid;
+        height: 100%;
         /* 3 columns, as many rows as needed */
         grid-template-columns: repeat(2, 1fr);
-        margin: 10px;
+        padding: 10px;
         gap: 10px;
+        background: linear-gradient(45deg, #f3ec78, #af4261);
+        overflow: scroll;
     }
 
     @media (max-width: 768px) {

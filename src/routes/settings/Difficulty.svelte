@@ -1,18 +1,15 @@
 <script>
-    import { level, poem_store, logo, image_filename, settings, lives, victory, leading_idx, stanza, verse } from '../stores.js';
+    import { level, poem_store, logo, image_filename, settings, victory, leading_idx, stanza, verse } from '../stores.js';
     export let highest_completed_level = 2;
 
     import { tweened } from 'svelte/motion';
     import { onMount } from 'svelte';
     import { load_logo } from '../recite/loaders.js';
 
-    $: lives.set($settings.lives);
     let perc_qmarks = tweened(0, { duration: 500 });
     let perc_words = tweened(0, { duration: 500 });
-    let tweened_lives = tweened(0, { duration: 300 });
     $:  perc_words.set($settings.words_required);
     $:  perc_qmarks.set($settings.percent_question_mark);
-    $:  tweened_lives.set($settings.lives);
 
     let letters = "ouamdwipwawomaqacvoflwinnnstcataosogrramcd";
     letters = letters.slice(0, 3 * 7);
@@ -41,16 +38,17 @@
     />
     <div class="poem_info_box">
         <div class="title_box" bind:this={title_element}>{$poem_store.title}</div>
+        {#await logo_promise}
+        {:then}
         <svg class="icon" viewBox={$poem_store.logo_viewbox} >
-            {#await logo_promise}
-            {:then}
                 {#each $logo as d}
                 <path d={d} fill=none stroke=black stroke-width=3
-                    in:draw|global={{delay: 500, duration: 3000, easing: expoOut }}
+                    in:fade={{duration: 1000, delay: 0, easing: quadOut}}
                     />
+                    <!-- in:draw|global={{delay: 500, duration: 3000, easing: expoOut }} -->
                 {/each} 
-            {/await}
         </svg>
+        {/await}
     </div>
 
 
@@ -69,24 +67,6 @@
         {/each}
     </div>
     <div class="settings_stats">
-        <div class="heartboxes">
-            <center>Lives</center>
-            <div class="heartsymbols" >
-                {#each Array.from({ length: 3 }) as _, i}
-                <svg viewBox="-3 -3 73 73" width="100%" height="100%">
-                    <defs>
-                        <linearGradient id={i}grad x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset={($tweened_lives-i)/1.0 * 100}% style="stop-color:rgb(255,0,0);stop-opacity:1" />
-                            <stop offset="0%" style="stop-color:rgba(0,0,0,0);stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <path d="M 55.538727,2.5013793 C 62.852607,5.7954098 64.717147,17.321224 63.422767,25.237539 60.709317,41.832788 42.528937,47.541787 32.575357,65.153987 22.621771,47.460247 4.463432,41.742226 1.727932,25.156002 0.42859202,17.277654 2.200245,5.7823108 9.4740818,2.4886863 17.039308,-0.93688074 28.080327,3.4771943 32.506407,11.986918 36.932487,3.4898873 47.968097,-0.90828874 55.538727,2.5013793 Z"
-                        stroke="black" stroke-width="8" fill={`url(#${i}grad)`}
-                    />
-                </svg>
-                {/each}
-            </div>  
-        </div>
         <div class="openboxes">
             <center>You Speak</center>
             <div>
@@ -191,7 +171,7 @@
         align-items: center;
         font-size: 1rem;
     }
-    .openboxes, .questionboxes, .heartboxes {
+    .openboxes, .questionboxes {
         flex: 0;
         font-weight: bold;
         position: relative;
@@ -213,12 +193,6 @@
         border-radius: 5px;
         border: 2px solid black;
         box-sizing: border-box;
-    }
-    .heartsymbols {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-        height: 1em;
     }
     /* letter grid */
     .letter_grid {

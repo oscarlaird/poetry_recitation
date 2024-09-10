@@ -12,6 +12,9 @@
     const [send, receive] = crossfade({
         duration: d => Math.sqrt(d * 200)
     });
+    // reset lives and victory
+    lives.set(3);
+    victory.set(0);
     // time
     let time = new Date();
     let start_time = time.getTime();

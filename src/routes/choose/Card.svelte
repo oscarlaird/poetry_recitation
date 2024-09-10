@@ -11,8 +11,11 @@
 </script>
 
 <button class="card" on:click={select_poem}>
-    <div class="poem_title">{poem.title}</div>
-    <div class="poem_author">{poem.author}</div>
+    <div class="poem_title"
+    >{poem.title}</div>
+    <div class="poem_author"><i>
+{poem.author}
+    </i></div>
 </button>
 
 <style>
@@ -25,13 +28,23 @@
         border: 1px solid black;
         cursor: pointer;
         font-size: 1.4em;
+        border-radius: 3px;
     }
-    .card:hover {
-        background-color: lightgray;
+    @media (hover: hover) {
+        .card:hover {
+            transform: scale(1.05);
+        }
     }
     @media (max-width: 768px) {
         .card {
             font-size: 1em;
         }
+    }
+    .poem_title {
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 1.3em;
+    }
+    .poem_author {
+        font-size: 1em;
     }
 </style>
