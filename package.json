@@ -20,6 +20,7 @@
 		"html2canvas": "^1.4.1",
 		"png-chunks-encode": "^1.0.0",
 		"png-chunks-extract": "^1.0.0",
+		"replicate": "^0.32.1",
 		"textfit": "^2.4.0",
 		"tone": "^15.0.4",
 		"vosk-browser": "^0.0.8"

@@ -1,0 +1,170 @@
+[
+    {
+        "conf": 1.0,
+        "end": 1.29,
+        "start": 1.08,
+        "word": "if"
+    },
+    {
+        "conf": 1.0,
+        "end": 1.56,
+        "start": 1.29,
+        "word": "all"
+    },
+    {
+        "conf": 1.0,
+        "end": 1.68,
+        "start": 1.56,
+        "word": "the"
+    },
+    {
+        "conf": 1.0,
+        "end": 2.07,
+        "start": 1.68,
+        "word": "world"
+    },
+    {
+        "conf": 1.0,
+        "end": 2.22,
+        "start": 2.07,
+        "word": "and"
+    },
+    {
+        "conf": 1.0,
+        "end": 2.49,
+        "start": 2.22,
+        "word": "love"
+    },
+    {
+        "conf": 1.0,
+        "end": 2.61,
+        "start": 2.49,
+        "word": "were"
+    },
+    {
+        "conf": 1.0,
+        "end": 3.06,
+        "start": 2.61,
+        "word": "young"
+    },
+    {
+        "conf": 1.0,
+        "end": 3.27,
+        "start": 3.06,
+        "word": "and"
+    },
+    {
+        "conf": 1.0,
+        "end": 3.69,
+        "start": 3.33,
+        "word": "truth"
+    },
+    {
+        "conf": 1.0,
+        "end": 3.81,
+        "start": 3.69,
+        "word": "in"
+    },
+    {
+        "conf": 1.0,
+        "end": 4.17,
+        "start": 3.81,
+        "word": "every"
+    },
+    {
+        "conf": 1.0,
+        "end": 4.65,
+        "start": 4.17,
+        "word": "shepherds"
+    },
+    {
+        "conf": 1.0,
+        "end": 5.13,
+        "start": 4.65,
+        "word": "tongue"
+    },
+    {
+        "conf": 1.0,
+        "end": 5.46,
+        "start": 5.22,
+        "word": "these"
+    },
+    {
+        "conf": 1.0,
+        "end": 5.76,
+        "start": 5.46,
+        "word": "pretty"
+    },
+    {
+        "conf": 1.0,
+        "end": 6.3,
+        "start": 5.76,
+        "word": "pleasures"
+    },
+    {
+        "conf": 1.0,
+        "end": 6.57,
+        "start": 6.33,
+        "word": "might"
+    },
+    {
+        "conf": 1.0,
+        "end": 6.72,
+        "start": 6.57,
+        "word": "me"
+    },
+    {
+        "conf": 1.0,
+        "end": 7.2,
+        "start": 6.72,
+        "word": "move"
+    },
+    {
+        "conf": 1.0,
+        "end": 7.38,
+        "start": 7.2,
+        "word": "to"
+    },
+    {
+        "conf": 1.0,
+        "end": 7.65,
+        "start": 7.38,
+        "word": "live"
+    },
+    {
+        "conf": 1.0,
+        "end": 7.86,
+        "start": 7.65,
+        "word": "with"
+    },
+    {
+        "conf": 1.0,
+        "end": 8.31,
+        "start": 7.89,
+        "word": "thee"
+    },
+    {
+        "conf": 1.0,
+        "end": 8.58,
+        "start": 8.37,
+        "word": "and"
+    },
+    {
+        "conf": 1.0,
+        "end": 8.76,
+        "start": 8.61,
+        "word": "be"
+    },
+    {
+        "conf": 1.0,
+        "end": 8.94,
+        "start": 8.76,
+        "word": "thy"
+    },
+    {
+        "conf": 1.0,
+        "end": 9.42,
+        "start": 8.94,
+        "word": "love"
+    }
+]

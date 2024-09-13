@@ -125,6 +125,7 @@
         // play the audio from start_word_idx to stop_word_idx
         // wait for the audio to finish
         let start_time = $timestamps[start_word_idx].start - 0.02;
+        start_time = Math.max(0, start_time); // don't start before the beginning of the audio
         let stop_time = $timestamps[stop_word_idx].end;
         // console.log('playing from', start_time, 'to', stop_time);
         narrator_source = narrator_audioContext.createBufferSource();

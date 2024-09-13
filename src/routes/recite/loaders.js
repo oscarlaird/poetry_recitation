@@ -82,7 +82,7 @@ function parse_poem(poem) {
         let words = parse_verse(verse);
         for (let word of words) {
             // set question marks
-            let initial = Math.random() < get(settings).percent_question_mark && current_speaker === 1 ? "?" : word.word[0];
+            let initial = word.word[0];
             stanza_words.push({stanza: stanza_no, verse: verse_no, id: word_id, speaker: current_speaker, initial: initial, ...word});
             word_id += 1;
             // alternate speakers

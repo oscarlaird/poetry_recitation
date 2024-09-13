@@ -1,0 +1,128 @@
+[
+    {
+        "conf": 1.0,
+        "end": 0.93,
+        "start": 0.54,
+        "word": "nothing"
+    },
+    {
+        "conf": 1.0,
+        "end": 1.44,
+        "start": 0.93,
+        "word": "beside"
+    },
+    {
+        "conf": 1.0,
+        "end": 2.34,
+        "start": 1.47,
+        "word": "remains"
+    },
+    {
+        "conf": 1.0,
+        "end": 3.09,
+        "start": 2.73,
+        "word": "round"
+    },
+    {
+        "conf": 1.0,
+        "end": 3.24,
+        "start": 3.12,
+        "word": "the"
+    },
+    {
+        "conf": 1.0,
+        "end": 3.69,
+        "start": 3.24,
+        "word": "decay"
+    },
+    {
+        "conf": 1.0,
+        "end": 3.81,
+        "start": 3.69,
+        "word": "of"
+    },
+    {
+        "conf": 1.0,
+        "end": 4.14,
+        "start": 3.81,
+        "word": "that"
+    },
+    {
+        "conf": 1.0,
+        "end": 4.71,
+        "start": 4.17,
+        "word": "colossal"
+    },
+    {
+        "conf": 1.0,
+        "end": 5.28,
+        "start": 4.71,
+        "word": "wreck"
+    },
+    {
+        "conf": 1.0,
+        "end": 6.48,
+        "start": 5.76,
+        "word": "boundless"
+    },
+    {
+        "conf": 1.0,
+        "end": 6.69,
+        "start": 6.48,
+        "word": "and"
+    },
+    {
+        "conf": 1.0,
+        "end": 7.41,
+        "start": 6.69,
+        "word": "bare"
+    },
+    {
+        "conf": 1.0,
+        "end": 7.92,
+        "start": 7.77,
+        "word": "the"
+    },
+    {
+        "conf": 1.0,
+        "end": 8.4,
+        "start": 7.92,
+        "word": "lone"
+    },
+    {
+        "conf": 1.0,
+        "end": 8.55,
+        "start": 8.4,
+        "word": "and"
+    },
+    {
+        "conf": 1.0,
+        "end": 8.88,
+        "start": 8.58,
+        "word": "level"
+    },
+    {
+        "conf": 1.0,
+        "end": 9.99,
+        "start": 8.88,
+        "word": "sands"
+    },
+    {
+        "conf": 1.0,
+        "end": 10.65,
+        "start": 10.08,
+        "word": "stretch"
+    },
+    {
+        "conf": 1.0,
+        "end": 11.01,
+        "start": 10.68,
+        "word": "far"
+    },
+    {
+        "conf": 1.0,
+        "end": 11.61,
+        "start": 11.01,
+        "word": "away"
+    }
+]

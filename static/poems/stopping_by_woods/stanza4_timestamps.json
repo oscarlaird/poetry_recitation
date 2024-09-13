@@ -3,7 +3,8 @@
         "conf": 1.0,
         "end": 0.87,
         "start": 0.63,
-        "word": "the"
+        "word": "the",
+        "alternatives": ["woods"]
     },
     {
         "conf": 1.0,

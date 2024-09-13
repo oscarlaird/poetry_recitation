@@ -11,8 +11,12 @@
     $:  perc_words.set($settings.words_required);
     $:  perc_qmarks.set($settings.percent_question_mark);
 
-    let letters = "ouamdwipwawomaqacvoflwinnnstcataosogrramcd";
-    letters = letters.slice(0, 3 * 7);
+    let base_letters = "ouamdwipwawomaqacvoflwinnnstcataosogrramcd";
+    base_letters = base_letters.slice(0, 3 * 7);
+    $: letters = base_letters.split('')
+         .map(l => ({ letter: l, speaker: Math.random() < $settings.words_required ? 1 : 0 })) // assign speaker
+         .map(l => ({ ...l, initial: Math.random() < $settings.percent_question_mark && l.speaker === 1 ? '?' : l.letter }));  // assign question mark
+
 
     import { expoOut, linear, quadIn, quadOut } from 'svelte/easing';
     import { draw, fade, slide } from 'svelte/transition';
@@ -88,10 +92,10 @@
     {#key $level}
     <div class="letter_grid"
     >
-    {#each letters as letter}
+    {#each letters as { letter, speaker, initial }, i}
         <div class="letter"
-                class:we_speak={Math.random() < $settings.words_required} 
-            >{Math.random() < $settings.percent_question_mark ? '?' : letter}</div>
+                class:we_speak={speaker===1} 
+            >{initial}</div>
     {/each}
     </div>
     {/key}
