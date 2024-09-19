@@ -45,6 +45,9 @@
             transform: scale(1);
         }
     }
+    .fade {
+        animation: fadeGreenToBlack 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
     .bar {
         height: 100%;
         min-height: 100%;
@@ -57,8 +60,5 @@
     }
     .poem_title {
         font-family: 'Kingthings Calligraphica 2';
-    }
-    .fade {
-        animation: fadeGreenToBlack 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
 </style>

@@ -50,6 +50,7 @@ function parse_verse(verse) {
     // Return {word: "tis", written: "’Tis "}
     // A word_segment includes all punctuation and whitespace before the next word
     let word_segments = verse.match(/\b\w+(?:'\w+)?\W*/g)
+    console.log("word_segments:", word_segments)
     
     // The first word_segment should also include any leading punctuation
     let nonword_prefix = verse.match(/^\W*/)
@@ -62,7 +63,7 @@ function parse_verse(verse) {
     let words = word_segments.map(word => word.match(/\b\w+(?:'\w+)?/)[0].toLowerCase())
 
     // Remove apostrophes from the words for recognition in Vosk
-    words = words.map(word => word.replace(/'/, ""))
+    words = words.map(word => word.match(/\w+/)[0]) // remove apostrophes and trailing s
     
     // Zip words and their corresponding written segments
     return words.map((word, i) => {
@@ -197,7 +198,7 @@ async function fetch_timestamps_for_stanza(stanza) {
     await fetch(timestamps_filename)
         .then(response => response.json())
         .then(data => {
-            console.assert(data.length === stanza_words.length, "timestamps and all_words should have the same length but have lengths", data.length, stanza_words.length);
+            console.assert(data.length === stanza_words.length, "timestamps and all_words should have the same length but have lengths", data.length, stanza_words.length, data, stanza_words);
             // check that they agree in every word
             for (let i = 0; i < data.length; i++) {
                 if (data[i].word !== stanza_words[i].word) {

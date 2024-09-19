@@ -1,170 +1,176 @@
 [
     {
         "conf": 1.0,
-        "end": 0.78,
+        "end": 0.69,
         "start": 0.51,
-        "word": "when"
+        "word": "thy"
     },
     {
         "conf": 1.0,
         "end": 0.93,
-        "start": 0.78,
-        "word": "the"
+        "start": 0.69,
+        "word": "belt"
     },
     {
         "conf": 1.0,
-        "end": 1.5,
+        "end": 1.02,
         "start": 0.93,
-        "word": "stars"
+        "word": "of"
     },
     {
         "conf": 1.0,
-        "end": 1.74,
-        "start": 1.5,
-        "word": "threw"
+        "end": 1.47,
+        "start": 1.02,
+        "word": "straw"
     },
     {
         "conf": 1.0,
-        "end": 2.01,
-        "start": 1.74,
-        "word": "down"
-    },
-    {
-        "conf": 1.0,
-        "end": 2.16,
-        "start": 2.01,
-        "word": "their"
-    },
-    {
-        "conf": 1.0,
-        "end": 2.82,
-        "start": 2.16,
-        "word": "spears"
-    },
-    {
-        "conf": 1.0,
-        "end": 2.97,
-        "start": 2.82,
+        "end": 1.65,
+        "start": 1.47,
         "word": "and"
     },
     {
         "conf": 1.0,
-        "end": 3.39,
-        "start": 2.97,
-        "word": "watered"
+        "end": 1.95,
+        "start": 1.65,
+        "word": "ivy"
+    },
+    {
+        "conf": 1.0,
+        "end": 2.31,
+        "start": 1.95,
+        "word": "buds"
+    },
+    {
+        "conf": 1.0,
+        "end": 2.46,
+        "start": 2.31,
+        "word": "thy"
+    },
+    {
+        "conf": 1.0,
+        "end": 2.76,
+        "start": 2.46,
+        "word": "coral"
+    },
+    {
+        "conf": 1.0,
+        "end": 3.3,
+        "start": 2.76,
+        "word": "clasps"
+    },
+    {
+        "conf": 1.0,
+        "end": 3.45,
+        "start": 3.3,
+        "word": "and"
     },
     {
         "conf": 1.0,
         "end": 3.75,
-        "start": 3.39,
-        "word": "heaven"
+        "start": 3.45,
+        "word": "amber"
     },
     {
         "conf": 1.0,
-        "end": 4.02,
+        "end": 4.2,
         "start": 3.75,
-        "word": "with"
+        "word": "studs"
     },
     {
         "conf": 1.0,
-        "end": 4.32,
-        "start": 4.08,
-        "word": "their"
+        "end": 4.38,
+        "start": 4.2,
+        "word": "all"
     },
     {
         "conf": 1.0,
-        "end": 5.04,
-        "start": 4.32,
-        "word": "tears"
+        "end": 4.62,
+        "start": 4.38,
+        "word": "these"
     },
     {
         "conf": 1.0,
-        "end": 5.61,
-        "start": 5.34,
-        "word": "did"
+        "end": 4.74,
+        "start": 4.62,
+        "word": "in"
+    },
+    {
+        "conf": 1.0,
+        "end": 5.07,
+        "start": 4.74,
+        "word": "me"
+    },
+    {
+        "conf": 1.0,
+        "end": 5.25,
+        "start": 5.07,
+        "word": "no"
+    },
+    {
+        "conf": 1.0,
+        "end": 5.55,
+        "start": 5.25,
+        "word": "means"
     },
     {
         "conf": 1.0,
         "end": 5.73,
-        "start": 5.61,
-        "word": "he"
+        "start": 5.55,
+        "word": "can"
+    },
+    {
+        "conf": 1.0,
+        "end": 6.12,
+        "start": 5.73,
+        "word": "move"
     },
     {
         "conf": 1.0,
         "end": 6.24,
-        "start": 5.73,
-        "word": "smile"
-    },
-    {
-        "conf": 1.0,
-        "end": 6.42,
-        "start": 6.27,
-        "word": "his"
-    },
-    {
-        "conf": 1.0,
-        "end": 6.75,
-        "start": 6.42,
-        "word": "work"
-    },
-    {
-        "conf": 1.0,
-        "end": 6.9,
-        "start": 6.75,
+        "start": 6.12,
         "word": "to"
     },
     {
         "conf": 1.0,
-        "end": 7.38,
-        "start": 6.9,
-        "word": "see"
+        "end": 6.48,
+        "start": 6.24,
+        "word": "come"
     },
     {
         "conf": 1.0,
-        "end": 8.01,
-        "start": 7.8,
-        "word": "did"
+        "end": 6.63,
+        "start": 6.48,
+        "word": "to"
     },
     {
         "conf": 1.0,
-        "end": 8.16,
-        "start": 8.01,
-        "word": "he"
-    },
-    {
-        "conf": 1.0,
-        "end": 8.31,
-        "start": 8.16,
-        "word": "who"
-    },
-    {
-        "conf": 1.0,
-        "end": 8.67,
-        "start": 8.31,
-        "word": "made"
-    },
-    {
-        "conf": 1.0,
-        "end": 8.79,
-        "start": 8.67,
-        "word": "the"
-    },
-    {
-        "conf": 1.0,
-        "end": 9.18,
-        "start": 8.79,
-        "word": "lamb"
-    },
-    {
-        "conf": 1.0,
-        "end": 9.48,
-        "start": 9.21,
-        "word": "make"
-    },
-    {
-        "conf": 1.0,
-        "end": 9.87,
-        "start": 9.48,
+        "end": 6.87,
+        "start": 6.63,
         "word": "thee"
+    },
+    {
+        "conf": 1.0,
+        "end": 7.02,
+        "start": 6.87,
+        "word": "and"
+    },
+    {
+        "conf": 1.0,
+        "end": 7.2,
+        "start": 7.05,
+        "word": "be"
+    },
+    {
+        "conf": 1.0,
+        "end": 7.38,
+        "start": 7.2,
+        "word": "thy"
+    },
+    {
+        "conf": 1.0,
+        "end": 7.8,
+        "start": 7.38,
+        "word": "love"
     }
 ]
